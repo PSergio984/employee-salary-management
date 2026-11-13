@@ -333,7 +333,8 @@ export const AppShell: React.FC = () => {
       </main>
 
       {/* Contextual Create/Edit Modal */}
-      <EmployeeModal
+      {isModalOpen && <EmployeeModal
+        key={employeeToEdit?.id ?? 'create'}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onSubmitCreate={createEmployeeApi}
@@ -345,7 +346,7 @@ export const AppShell: React.FC = () => {
             void handleRefreshSelectedEmployee(saved.id);
           }
         }}
-      />
+      />}
     </div>
   );
 };
