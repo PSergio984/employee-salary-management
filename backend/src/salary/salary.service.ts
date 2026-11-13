@@ -7,11 +7,25 @@ import {
 import { Prisma } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { UpdateBasicSalaryDto } from './dto/update-basic-salary.dto.js';
+import { AssignEmployeeComponentDto } from './dto/assign-employee-component.dto.js';
+import { UpdateEmployeeComponentDto } from './dto/update-employee-component.dto.js';
+import { RemoveEmployeeComponentDto } from './dto/remove-employee-component.dto.js';
 import { calculateRates, SalaryRates } from './utils/rates.js';
 
 export interface BasicSalaryResponse {
   id: number;
   employeeId: number;
+  amount: string;
+  isActive: boolean;
+  recordedAt: string;
+  endedAt: string | null;
+}
+
+export interface EmployeeComponentResponse {
+  id: number;
+  employeeId: number;
+  componentId: number;
+  name: string;
   amount: string;
   isActive: boolean;
   recordedAt: string;
@@ -26,7 +40,15 @@ export interface BasicSalarySummaryResponse {
     basic: SalaryRates | null;
     total: SalaryRates | null;
   };
-  components: Array<unknown>;
+  components: Array<{
+    id: number;
+    componentId: number;
+    name: string;
+    amount: string;
+    recordedAt?: string;
+    isActive?: boolean;
+  }>;
+  totalMonthlyCompensation: string | null;
 }
 
 @Injectable()
@@ -98,149 +120,135 @@ export class SalaryService {
       !Number.isInteger(dto.expectedVersion) ||
       dto.expectedVersion < 1
     ) {
-      throw new BadRequestException({
-        error: {
-          code: 'INVALID_EXPECTED_VERSION',
-          message: 'expectedVersion is required and must be an integer >= 1',
-        },
-      });
+      throw new BadRequestException(
+        'expectedVersion is required and must be an integer >= 1',
+      );
     }
 
     if (
-      dto.expectedCurrentId === undefined ||
-      (dto.expectedCurrentId !== null &&
-        (!Number.isInteger(dto.expectedCurrentId) || dto.expectedCurrentId < 1))
+      dto.expectedCurrentId !== null &&
+      (!Number.isInteger(dto.expectedCurrentId) || dto.expectedCurrentId < 1)
     ) {
-      throw new BadRequestException({
-        error: {
-          code: 'INVALID_EXPECTED_CURRENT_ID',
-          message:
-            'expectedCurrentId must be explicitly null (for first assignment) or an integer >= 1',
-        },
-      });
+      throw new BadRequestException(
+        'expectedCurrentId must be an integer >= 1 or null for first assignment',
+      );
     }
 
     return this.prisma.$transaction(async (tx) => {
-      // 1. Fetch and lock employee row
-      const employees = await tx.$queryRaw<
-        Array<{ id: number; is_active: boolean; version: number }>
+      const lockedEmployees = await tx.$queryRaw<
+        Array<{ id: number; version: number; is_active: boolean }>
       >`
-        SELECT id, is_active, version FROM "employees" WHERE id = ${employeeId} FOR UPDATE
+        SELECT id, version, is_active
+        FROM employees
+        WHERE id = ${employeeId}
+        FOR UPDATE;
       `;
-      if (!employees || employees.length === 0) {
+
+      if (!lockedEmployees || lockedEmployees.length === 0) {
         throw new NotFoundException(`Employee with ID ${employeeId} not found`);
       }
-      const emp = employees[0];
-      if (!emp.is_active) {
-        throw new ConflictException(
-          'Cannot assign or update salary for an archived employee',
-        );
+
+      const lockedEmp = lockedEmployees[0];
+      if (!lockedEmp.is_active) {
+        throw new ConflictException('Cannot assign or update salary for an archived employee');
       }
-      if (emp.version !== dto.expectedVersion) {
+
+      if (lockedEmp.version !== dto.expectedVersion) {
         throw new ConflictException(
-          `Employee version conflict: expected version ${dto.expectedVersion}, but found ${emp.version}`,
+          `Employee version conflict: expected version ${dto.expectedVersion}, but found ${lockedEmp.version}`,
         );
       }
 
-      // 2. Fetch current active basic salary assignment with FOR UPDATE
       const currentAssignments = await tx.$queryRaw<
         Array<{
           id: number;
           employee_id: number;
-          amount: string;
+          amount: Prisma.Decimal;
           is_active: boolean;
           recorded_at: Date;
           ended_at: Date | null;
         }>
       >`
-        SELECT id, employee_id, amount::text, is_active, recorded_at, ended_at
-        FROM "basic_salary_assignments"
+        SELECT id, employee_id, amount, is_active, recorded_at, ended_at
+        FROM basic_salary_assignments
         WHERE employee_id = ${employeeId} AND is_active = true
-        FOR UPDATE
+        FOR UPDATE;
       `;
-      const current =
+
+      const currentAssignment =
         currentAssignments.length > 0 ? currentAssignments[0] : null;
 
-      // 3. Concurrency check on expectedCurrentId
-      if (current === null) {
-        if (dto.expectedCurrentId !== null) {
-          throw new ConflictException(
-            `Expected current salary ID ${dto.expectedCurrentId}, but employee has no current salary assignment`,
-          );
-        }
-      } else {
-        if (dto.expectedCurrentId !== current.id) {
-          throw new ConflictException(
-            `Stale current salary ID: expected ${dto.expectedCurrentId}, but current is ${current.id}`,
-          );
-        }
+      if (dto.expectedCurrentId === null && currentAssignment !== null) {
+        throw new ConflictException(
+          'Stale current salary ID: a basic salary already exists for this employee',
+        );
       }
 
-      // 4. Same-amount save is a no-op
-      if (current !== null) {
-        const currentAmountFormatted = new Prisma.Decimal(current.amount).toFixed(2);
-        if (currentAmountFormatted === canonicalAmount) {
-          return {
-            current: {
-              id: current.id,
-              employeeId: current.employee_id,
-              amount: currentAmountFormatted,
-              isActive: current.is_active,
-              recordedAt: current.recorded_at.toISOString(),
-              endedAt: current.ended_at
-                ? current.ended_at.toISOString()
-                : null,
-            },
-            employeeVersion: emp.version,
-          };
-        }
+      if (
+        dto.expectedCurrentId !== null &&
+        (currentAssignment === null || currentAssignment.id !== dto.expectedCurrentId)
+      ) {
+        throw new ConflictException(
+          'Stale current salary ID. The record was modified by another request. Please refresh.',
+        );
       }
 
-      // 5. Retire old assignment if exists
+      if (
+        currentAssignment &&
+        new Prisma.Decimal(currentAssignment.amount).toFixed(2) === canonicalAmount
+      ) {
+        return {
+          current: {
+            id: currentAssignment.id,
+            employeeId: currentAssignment.employee_id,
+            amount: canonicalAmount,
+            isActive: true,
+            recordedAt: currentAssignment.recorded_at.toISOString(),
+            endedAt: currentAssignment.ended_at
+              ? currentAssignment.ended_at.toISOString()
+              : null,
+          },
+          employeeVersion: lockedEmp.version,
+        };
+      }
+
       const now = new Date();
-      if (current !== null) {
-        await tx.$executeRaw`
-          UPDATE "basic_salary_assignments"
-          SET is_active = false, ended_at = ${now}
-          WHERE id = ${current.id}
-        `;
+
+      if (currentAssignment) {
+        await tx.basicSalaryAssignment.update({
+          where: { id: currentAssignment.id },
+          data: {
+            isActive: false,
+            endedAt: now,
+          },
+        });
       }
 
-      // 6. Insert new assignment
-      const inserted = await tx.$queryRaw<
-        Array<{
-          id: number;
-          employee_id: number;
-          amount: string;
-          is_active: boolean;
-          recorded_at: Date;
-          ended_at: Date | null;
-        }>
-      >`
-        INSERT INTO "basic_salary_assignments" (employee_id, amount, is_active, recorded_at, ended_at)
-        VALUES (${employeeId}, ${canonicalAmount}::numeric(14,2), true, ${now}, NULL)
-        RETURNING id, employee_id, amount::text, is_active, recorded_at, ended_at
-      `;
-      const newAssignment = inserted[0];
+      const created = await tx.basicSalaryAssignment.create({
+        data: {
+          employeeId,
+          amount: canonicalAmount,
+          isActive: true,
+          recordedAt: now,
+        },
+      });
 
-      // 7. Increment employee version
-      const updatedEmp = await tx.$queryRaw<Array<{ version: number }>>`
-        UPDATE "employees"
-        SET version = version + 1, updated_at = ${now}
-        WHERE id = ${employeeId}
-        RETURNING version
-      `;
+      const nextVersion = lockedEmp.version + 1;
+      await tx.employee.update({
+        where: { id: employeeId },
+        data: { version: nextVersion },
+      });
 
       return {
         current: {
-          id: newAssignment.id,
-          employeeId: newAssignment.employee_id,
-          amount: new Prisma.Decimal(newAssignment.amount).toFixed(2),
-          isActive: newAssignment.is_active,
-          recordedAt: newAssignment.recorded_at.toISOString(),
+          id: created.id,
+          employeeId: created.employeeId,
+          amount: canonicalAmount,
+          isActive: true,
+          recordedAt: created.recordedAt.toISOString(),
           endedAt: null,
         },
-        employeeVersion: updatedEmp[0].version,
+        employeeVersion: nextVersion,
       };
     });
   }
@@ -275,6 +283,395 @@ export class SalaryService {
     };
   }
 
+  // --- TICKET 05: EMPLOYEE COMPONENTS ---
+
+  async getEmployeeComponents(employeeId: number): Promise<{
+    items: EmployeeComponentResponse[];
+    total: number;
+  }> {
+    const employee = await this.prisma.employee.findUnique({
+      where: { id: employeeId },
+      select: { id: true },
+    });
+    if (!employee) {
+      throw new NotFoundException(`Employee with ID ${employeeId} not found`);
+    }
+
+    const assignments = await this.prisma.employeeSalaryComponent.findMany({
+      where: { employeeId, isActive: true },
+      include: { component: true },
+      orderBy: [{ recordedAt: 'asc' }, { id: 'asc' }],
+    });
+
+    return {
+      items: assignments.map((a) => ({
+        id: a.id,
+        employeeId: a.employeeId,
+        componentId: a.componentId,
+        name: a.component.name,
+        amount: new Prisma.Decimal(a.amount).toFixed(2),
+        isActive: a.isActive,
+        recordedAt: a.recordedAt.toISOString(),
+        endedAt: a.endedAt ? a.endedAt.toISOString() : null,
+      })),
+      total: assignments.length,
+    };
+  }
+
+  async assignEmployeeComponent(
+    employeeId: number,
+    dto: AssignEmployeeComponentDto,
+  ): Promise<{
+    item: EmployeeComponentResponse;
+    employeeVersion: number;
+  }> {
+    const canonicalAmount = this.canonicalizeAmount(dto.amount);
+
+    return this.prisma.$transaction(async (tx) => {
+      // 1. Definition-first lock order to prevent deadlock with global component archive
+      const lockedComponents = await tx.$queryRaw<
+        Array<{ id: number; name: string; is_active: boolean }>
+      >`
+        SELECT id, name, is_active
+        FROM salary_components
+        WHERE id = ${dto.componentId}
+        FOR UPDATE;
+      `;
+
+      if (!lockedComponents || lockedComponents.length === 0) {
+        throw new NotFoundException(`Salary component with ID ${dto.componentId} not found`);
+      }
+      const lockedComp = lockedComponents[0];
+      if (!lockedComp.is_active) {
+        throw new BadRequestException('Cannot assign an archived salary component definition');
+      }
+
+      // 2. Employee lock
+      const lockedEmployees = await tx.$queryRaw<
+        Array<{ id: number; version: number; is_active: boolean }>
+      >`
+        SELECT id, version, is_active
+        FROM employees
+        WHERE id = ${employeeId}
+        FOR UPDATE;
+      `;
+
+      if (!lockedEmployees || lockedEmployees.length === 0) {
+        throw new NotFoundException(`Employee with ID ${employeeId} not found`);
+      }
+      const lockedEmp = lockedEmployees[0];
+      if (!lockedEmp.is_active) {
+        throw new BadRequestException('Cannot assign component to an archived employee');
+      }
+
+      if (lockedEmp.version !== dto.expectedVersion) {
+        throw new ConflictException({
+          code: 'VERSION_CONFLICT',
+          message: 'Employee record was modified by another request. Please refresh and review.',
+        });
+      }
+
+      // 3. Basic salary requirement check (zero qualifies, unassigned rejects)
+      const currentBasic = await tx.basicSalaryAssignment.findFirst({
+        where: { employeeId, isActive: true },
+      });
+      if (!currentBasic) {
+        throw new BadRequestException(
+          'Employee must have an assigned basic salary before assigning salary components',
+        );
+      }
+
+      // 4. Duplicate active pair check
+      const existingActive = await tx.employeeSalaryComponent.findFirst({
+        where: { employeeId, componentId: dto.componentId, isActive: true },
+      });
+      if (existingActive) {
+        throw new ConflictException({
+          error: {
+            code: 'DUPLICATE_ACTIVE_COMPONENT',
+            message: `Component "${lockedComp.name}" is already actively assigned to this employee. Please edit the existing assignment instead.`,
+          },
+        });
+      }
+
+      const now = new Date();
+      const created = await tx.employeeSalaryComponent.create({
+        data: {
+          employeeId,
+          componentId: dto.componentId,
+          amount: canonicalAmount,
+          isActive: true,
+          recordedAt: now,
+        },
+      });
+
+      const nextVersion = lockedEmp.version + 1;
+      await tx.employee.update({
+        where: { id: employeeId },
+        data: { version: nextVersion },
+      });
+
+      return {
+        item: {
+          id: created.id,
+          employeeId: created.employeeId,
+          componentId: created.componentId,
+          name: lockedComp.name,
+          amount: canonicalAmount,
+          isActive: true,
+          recordedAt: created.recordedAt.toISOString(),
+          endedAt: null,
+        },
+        employeeVersion: nextVersion,
+      };
+    });
+  }
+
+  async updateEmployeeComponent(
+    employeeId: number,
+    componentId: number,
+    dto: UpdateEmployeeComponentDto,
+  ): Promise<{
+    item: EmployeeComponentResponse;
+    employeeVersion: number;
+  }> {
+    const canonicalAmount = this.canonicalizeAmount(dto.amount);
+
+    return this.prisma.$transaction(async (tx) => {
+      // 1. Definition-first lock
+      const lockedComponents = await tx.$queryRaw<
+        Array<{ id: number; name: string; is_active: boolean }>
+      >`
+        SELECT id, name, is_active
+        FROM salary_components
+        WHERE id = ${componentId}
+        FOR UPDATE;
+      `;
+      if (!lockedComponents || lockedComponents.length === 0) {
+        throw new NotFoundException(`Salary component with ID ${componentId} not found`);
+      }
+      const lockedComp = lockedComponents[0];
+      if (!lockedComp.is_active) {
+        throw new BadRequestException('Cannot modify assignment of an archived salary component definition');
+      }
+
+      // 2. Employee lock
+      const lockedEmployees = await tx.$queryRaw<
+        Array<{ id: number; version: number; is_active: boolean }>
+      >`
+        SELECT id, version, is_active
+        FROM employees
+        WHERE id = ${employeeId}
+        FOR UPDATE;
+      `;
+      if (!lockedEmployees || lockedEmployees.length === 0) {
+        throw new NotFoundException(`Employee with ID ${employeeId} not found`);
+      }
+      const lockedEmp = lockedEmployees[0];
+      if (!lockedEmp.is_active) {
+        throw new BadRequestException('Cannot modify component of an archived employee');
+      }
+
+      if (lockedEmp.version !== dto.expectedVersion) {
+        throw new ConflictException({
+          code: 'VERSION_CONFLICT',
+          message: 'Employee record was modified by another request. Please refresh and review.',
+        });
+      }
+
+      // 3. Find active assignment
+      const currentAssignment = await tx.employeeSalaryComponent.findFirst({
+        where: { employeeId, componentId, isActive: true },
+      });
+      if (!currentAssignment) {
+        throw new NotFoundException(`Active component assignment not found for component ID ${componentId}`);
+      }
+
+      if (currentAssignment.id !== dto.expectedCurrentId) {
+        throw new ConflictException({
+          code: 'STALE_RECORD_CONFLICT',
+          message: 'Component assignment was modified by another request. Please refresh and review.',
+        });
+      }
+
+      // 4. Same-amount no-op
+      if (new Prisma.Decimal(currentAssignment.amount).toFixed(2) === canonicalAmount) {
+        return {
+          item: {
+            id: currentAssignment.id,
+            employeeId: currentAssignment.employeeId,
+            componentId: currentAssignment.componentId,
+            name: lockedComp.name,
+            amount: canonicalAmount,
+            isActive: true,
+            recordedAt: currentAssignment.recordedAt.toISOString(),
+            endedAt: null,
+          },
+          employeeVersion: lockedEmp.version,
+        };
+      }
+
+      // 5. Amount changed: retire old assignment, create new current assignment
+      const now = new Date();
+      await tx.employeeSalaryComponent.update({
+        where: { id: currentAssignment.id },
+        data: {
+          isActive: false,
+          endedAt: now,
+        },
+      });
+
+      const created = await tx.employeeSalaryComponent.create({
+        data: {
+          employeeId,
+          componentId,
+          amount: canonicalAmount,
+          isActive: true,
+          recordedAt: now,
+        },
+      });
+
+      const nextVersion = lockedEmp.version + 1;
+      await tx.employee.update({
+        where: { id: employeeId },
+        data: { version: nextVersion },
+      });
+
+      return {
+        item: {
+          id: created.id,
+          employeeId: created.employeeId,
+          componentId: created.componentId,
+          name: lockedComp.name,
+          amount: canonicalAmount,
+          isActive: true,
+          recordedAt: created.recordedAt.toISOString(),
+          endedAt: null,
+        },
+        employeeVersion: nextVersion,
+      };
+    });
+  }
+
+  async removeEmployeeComponent(
+    employeeId: number,
+    componentId: number,
+    dto: RemoveEmployeeComponentDto,
+  ): Promise<{
+    success: boolean;
+    employeeVersion: number;
+  }> {
+    return this.prisma.$transaction(async (tx) => {
+      // 1. Definition-first lock
+      const lockedComponents = await tx.$queryRaw<
+        Array<{ id: number; name: string; is_active: boolean }>
+      >`
+        SELECT id, name, is_active
+        FROM salary_components
+        WHERE id = ${componentId}
+        FOR UPDATE;
+      `;
+      if (!lockedComponents || lockedComponents.length === 0) {
+        throw new NotFoundException(`Salary component with ID ${componentId} not found`);
+      }
+
+      // 2. Employee lock
+      const lockedEmployees = await tx.$queryRaw<
+        Array<{ id: number; version: number; is_active: boolean }>
+      >`
+        SELECT id, version, is_active
+        FROM employees
+        WHERE id = ${employeeId}
+        FOR UPDATE;
+      `;
+      if (!lockedEmployees || lockedEmployees.length === 0) {
+        throw new NotFoundException(`Employee with ID ${employeeId} not found`);
+      }
+      const lockedEmp = lockedEmployees[0];
+      if (!lockedEmp.is_active) {
+        throw new BadRequestException('Cannot remove component from an archived employee');
+      }
+
+      if (lockedEmp.version !== dto.expectedVersion) {
+        throw new ConflictException({
+          code: 'VERSION_CONFLICT',
+          message: 'Employee record was modified by another request. Please refresh and review.',
+        });
+      }
+
+      // 3. Find active assignment
+      const currentAssignment = await tx.employeeSalaryComponent.findFirst({
+        where: { employeeId, componentId, isActive: true },
+      });
+      if (!currentAssignment) {
+        throw new NotFoundException(`Active component assignment not found for component ID ${componentId}`);
+      }
+
+      if (currentAssignment.id !== dto.expectedCurrentId) {
+        throw new ConflictException({
+          code: 'STALE_RECORD_CONFLICT',
+          message: 'Component assignment was modified by another request. Please refresh and review.',
+        });
+      }
+
+      // 4. Retire assignment (keep historical record)
+      const now = new Date();
+      await tx.employeeSalaryComponent.update({
+        where: { id: currentAssignment.id },
+        data: {
+          isActive: false,
+          endedAt: now,
+        },
+      });
+
+      const nextVersion = lockedEmp.version + 1;
+      await tx.employee.update({
+        where: { id: employeeId },
+        data: { version: nextVersion },
+      });
+
+      return {
+        success: true,
+        employeeVersion: nextVersion,
+      };
+    });
+  }
+
+  async getEmployeeComponentsHistory(employeeId: number): Promise<{
+    items: EmployeeComponentResponse[];
+    total: number;
+  }> {
+    const employee = await this.prisma.employee.findUnique({
+      where: { id: employeeId },
+      select: { id: true },
+    });
+    if (!employee) {
+      throw new NotFoundException(`Employee with ID ${employeeId} not found`);
+    }
+
+    const records = await this.prisma.employeeSalaryComponent.findMany({
+      where: { employeeId },
+      include: { component: true },
+      orderBy: [{ recordedAt: 'desc' }, { id: 'desc' }],
+    });
+
+    return {
+      items: records.map((r) => ({
+        id: r.id,
+        employeeId: r.employeeId,
+        componentId: r.componentId,
+        name: r.component.name,
+        amount: new Prisma.Decimal(r.amount).toFixed(2),
+        isActive: r.isActive,
+        recordedAt: r.recordedAt.toISOString(),
+        endedAt: r.endedAt ? r.endedAt.toISOString() : null,
+      })),
+      total: records.length,
+    };
+  }
+
+  // --- RATES & SUMMARY ---
+
   async getSalarySummary(
     employeeId: number,
   ): Promise<BasicSalarySummaryResponse> {
@@ -300,11 +697,47 @@ export class SalaryService {
           total: null,
         },
         components: [],
+        totalMonthlyCompensation: null,
       };
     }
 
     const basicAmountStr = new Prisma.Decimal(currentBasic.amount).toFixed(2);
     const basicRates = calculateRates(basicAmountStr);
+
+    // Active components tied to active component definitions
+    const activeComponents = await this.prisma.employeeSalaryComponent.findMany({
+      where: {
+        employeeId,
+        isActive: true,
+        component: { isActive: true },
+      },
+      include: { component: true },
+      orderBy: [{ recordedAt: 'asc' }, { id: 'asc' }],
+    });
+
+    // Sum monthly cents exactly
+    const [basicWhole, basicFrac = ''] = basicAmountStr.split('.');
+    let totalCents = BigInt(basicWhole) * 100n + BigInt((basicFrac + '00').slice(0, 2));
+
+    const componentsOutput = activeComponents.map((c) => {
+      const amtStr = new Prisma.Decimal(c.amount).toFixed(2);
+      const [w, f = ''] = amtStr.split('.');
+      totalCents += BigInt(w) * 100n + BigInt((f + '00').slice(0, 2));
+
+      return {
+        id: c.id,
+        componentId: c.componentId,
+        name: c.component.name,
+        amount: amtStr,
+        recordedAt: c.recordedAt.toISOString(),
+        isActive: c.isActive,
+      };
+    });
+
+    const totalWhole = totalCents / 100n;
+    const totalFrac = (totalCents % 100n).toString().padStart(2, '0');
+    const totalMonthlyStr = `${totalWhole}.${totalFrac}`;
+    const totalRates = calculateRates(totalMonthlyStr);
 
     return {
       employeeId,
@@ -312,9 +745,10 @@ export class SalaryService {
       basicSalary: basicAmountStr,
       rates: {
         basic: basicRates,
-        total: basicRates,
+        total: totalRates,
       },
-      components: [],
+      components: componentsOutput,
+      totalMonthlyCompensation: totalMonthlyStr,
     };
   }
 }

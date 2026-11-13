@@ -25,6 +25,26 @@ export interface BasicSalaryHistoryResponse {
   total: number;
 }
 
+export interface EmployeeComponentRecord {
+  id: number;
+  employeeId: number;
+  componentId: number;
+  name: string;
+  amount: string;
+  isActive: boolean;
+  recordedAt: string;
+  endedAt: string | null;
+}
+
+export interface SalarySummaryComponentItem {
+  id: number;
+  componentId: number;
+  name: string;
+  amount: string;
+  recordedAt?: string;
+  isActive?: boolean;
+}
+
 export interface SalarySummaryResponse {
   employeeId: number;
   hasBasicSalary: boolean;
@@ -33,11 +53,29 @@ export interface SalarySummaryResponse {
     basic: SalaryRates | null;
     total: SalaryRates | null;
   };
-  components: Array<unknown>;
+  components: SalarySummaryComponentItem[];
+  totalMonthlyCompensation: string | null;
 }
 
 export interface UpdateBasicSalaryPayload {
   amount: string;
-  expectedCurrentId?: number | null;
-  expectedVersion?: number;
+  expectedCurrentId: number | null;
+  expectedVersion: number;
+}
+
+export interface AssignEmployeeComponentPayload {
+  componentId: number;
+  amount: string;
+  expectedVersion: number;
+}
+
+export interface UpdateEmployeeComponentPayload {
+  amount: string;
+  expectedCurrentId: number;
+  expectedVersion: number;
+}
+
+export interface RemoveEmployeeComponentPayload {
+  expectedCurrentId: number;
+  expectedVersion: number;
 }

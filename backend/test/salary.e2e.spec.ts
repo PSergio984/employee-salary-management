@@ -87,6 +87,7 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
     authCookie = `salary_session=${rawSecret}`;
 
     // Clean up test salary and employee tables
+    await prisma.employeeSalaryComponent.deleteMany({});
     await prisma.basicSalaryAssignment.deleteMany({});
     await prisma.employee.deleteMany({});
   });

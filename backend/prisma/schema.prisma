@@ -43,7 +43,8 @@ model Employee {
   createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  salaryAssignments BasicSalaryAssignment[]
+  salaryAssignments    BasicSalaryAssignment[]
+  componentAssignments EmployeeSalaryComponent[]
 
   @@index([lastName, firstName])
   @@map("employees")
@@ -71,6 +72,24 @@ model SalaryComponent {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
+  assignments EmployeeSalaryComponent[]
+
   @@index([nameKey])
   @@map("salary_components")
+}
+
+model EmployeeSalaryComponent {
+  id          Int             @id @default(autoincrement())
+  employeeId  Int             @map("employee_id")
+  componentId Int             @map("component_id")
+  amount      Decimal         @map("amount") @db.Decimal(14, 2)
+  isActive    Boolean         @default(true) @map("is_active")
+  recordedAt  DateTime        @default(now()) @map("recorded_at") @db.Timestamptz(3)
+  endedAt     DateTime?       @map("ended_at") @db.Timestamptz(3)
+  employee    Employee        @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  component   SalaryComponent @relation(fields: [componentId], references: [id], onDelete: Restrict)
+
+  @@index([employeeId])
+  @@index([componentId])
+  @@map("employee_salary_components")
 }

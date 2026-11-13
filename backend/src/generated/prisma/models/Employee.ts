@@ -269,6 +269,7 @@ export type EmployeeWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   salaryAssignments?: Prisma.BasicSalaryAssignmentListRelationFilter
+  componentAssignments?: Prisma.EmployeeSalaryComponentListRelationFilter
 }
 
 export type EmployeeOrderByWithRelationInput = {
@@ -284,6 +285,7 @@ export type EmployeeOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   salaryAssignments?: Prisma.BasicSalaryAssignmentOrderByRelationAggregateInput
+  componentAssignments?: Prisma.EmployeeSalaryComponentOrderByRelationAggregateInput
 }
 
 export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
@@ -302,6 +304,7 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   salaryAssignments?: Prisma.BasicSalaryAssignmentListRelationFilter
+  componentAssignments?: Prisma.EmployeeSalaryComponentListRelationFilter
 }, "id" | "employeeIdKey">
 
 export type EmployeeOrderByWithAggregationInput = {
@@ -352,6 +355,7 @@ export type EmployeeCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   salaryAssignments?: Prisma.BasicSalaryAssignmentCreateNestedManyWithoutEmployeeInput
+  componentAssignments?: Prisma.EmployeeSalaryComponentCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateInput = {
@@ -367,6 +371,7 @@ export type EmployeeUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   salaryAssignments?: Prisma.BasicSalaryAssignmentUncheckedCreateNestedManyWithoutEmployeeInput
+  componentAssignments?: Prisma.EmployeeSalaryComponentUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUpdateInput = {
@@ -381,6 +386,7 @@ export type EmployeeUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   salaryAssignments?: Prisma.BasicSalaryAssignmentUpdateManyWithoutEmployeeNestedInput
+  componentAssignments?: Prisma.EmployeeSalaryComponentUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateInput = {
@@ -396,6 +402,7 @@ export type EmployeeUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   salaryAssignments?: Prisma.BasicSalaryAssignmentUncheckedUpdateManyWithoutEmployeeNestedInput
+  componentAssignments?: Prisma.EmployeeSalaryComponentUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateManyInput = {
@@ -518,6 +525,20 @@ export type EmployeeUpdateOneRequiredWithoutSalaryAssignmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutSalaryAssignmentsInput, Prisma.EmployeeUpdateWithoutSalaryAssignmentsInput>, Prisma.EmployeeUncheckedUpdateWithoutSalaryAssignmentsInput>
 }
 
+export type EmployeeCreateNestedOneWithoutComponentAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutComponentAssignmentsInput, Prisma.EmployeeUncheckedCreateWithoutComponentAssignmentsInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutComponentAssignmentsInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeUpdateOneRequiredWithoutComponentAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutComponentAssignmentsInput, Prisma.EmployeeUncheckedCreateWithoutComponentAssignmentsInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutComponentAssignmentsInput
+  upsert?: Prisma.EmployeeUpsertWithoutComponentAssignmentsInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutComponentAssignmentsInput, Prisma.EmployeeUpdateWithoutComponentAssignmentsInput>, Prisma.EmployeeUncheckedUpdateWithoutComponentAssignmentsInput>
+}
+
 export type EmployeeCreateWithoutSalaryAssignmentsInput = {
   employeeId: string
   employeeIdKey: string
@@ -529,6 +550,7 @@ export type EmployeeCreateWithoutSalaryAssignmentsInput = {
   version?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  componentAssignments?: Prisma.EmployeeSalaryComponentCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutSalaryAssignmentsInput = {
@@ -543,6 +565,7 @@ export type EmployeeUncheckedCreateWithoutSalaryAssignmentsInput = {
   version?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  componentAssignments?: Prisma.EmployeeSalaryComponentUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutSalaryAssignmentsInput = {
@@ -572,6 +595,7 @@ export type EmployeeUpdateWithoutSalaryAssignmentsInput = {
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  componentAssignments?: Prisma.EmployeeSalaryComponentUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutSalaryAssignmentsInput = {
@@ -586,6 +610,81 @@ export type EmployeeUncheckedUpdateWithoutSalaryAssignmentsInput = {
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  componentAssignments?: Prisma.EmployeeSalaryComponentUncheckedUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeCreateWithoutComponentAssignmentsInput = {
+  employeeId: string
+  employeeIdKey: string
+  firstName: string
+  middleName?: string | null
+  lastName: string
+  dateHired: Date | string
+  isActive?: boolean
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  salaryAssignments?: Prisma.BasicSalaryAssignmentCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutComponentAssignmentsInput = {
+  id?: number
+  employeeId: string
+  employeeIdKey: string
+  firstName: string
+  middleName?: string | null
+  lastName: string
+  dateHired: Date | string
+  isActive?: boolean
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  salaryAssignments?: Prisma.BasicSalaryAssignmentUncheckedCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutComponentAssignmentsInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutComponentAssignmentsInput, Prisma.EmployeeUncheckedCreateWithoutComponentAssignmentsInput>
+}
+
+export type EmployeeUpsertWithoutComponentAssignmentsInput = {
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutComponentAssignmentsInput, Prisma.EmployeeUncheckedUpdateWithoutComponentAssignmentsInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutComponentAssignmentsInput, Prisma.EmployeeUncheckedCreateWithoutComponentAssignmentsInput>
+  where?: Prisma.EmployeeWhereInput
+}
+
+export type EmployeeUpdateToOneWithWhereWithoutComponentAssignmentsInput = {
+  where?: Prisma.EmployeeWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutComponentAssignmentsInput, Prisma.EmployeeUncheckedUpdateWithoutComponentAssignmentsInput>
+}
+
+export type EmployeeUpdateWithoutComponentAssignmentsInput = {
+  employeeId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeIdKey?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  dateHired?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  salaryAssignments?: Prisma.BasicSalaryAssignmentUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutComponentAssignmentsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  employeeId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeIdKey?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  dateHired?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  salaryAssignments?: Prisma.BasicSalaryAssignmentUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 
@@ -595,10 +694,12 @@ export type EmployeeUncheckedUpdateWithoutSalaryAssignmentsInput = {
 
 export type EmployeeCountOutputType = {
   salaryAssignments: number
+  componentAssignments: number
 }
 
 export type EmployeeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   salaryAssignments?: boolean | EmployeeCountOutputTypeCountSalaryAssignmentsArgs
+  componentAssignments?: boolean | EmployeeCountOutputTypeCountComponentAssignmentsArgs
 }
 
 /**
@@ -618,6 +719,13 @@ export type EmployeeCountOutputTypeCountSalaryAssignmentsArgs<ExtArgs extends ru
   where?: Prisma.BasicSalaryAssignmentWhereInput
 }
 
+/**
+ * EmployeeCountOutputType without action
+ */
+export type EmployeeCountOutputTypeCountComponentAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeSalaryComponentWhereInput
+}
+
 
 export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -632,6 +740,7 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdAt?: boolean
   updatedAt?: boolean
   salaryAssignments?: boolean | Prisma.Employee$salaryAssignmentsArgs<ExtArgs>
+  componentAssignments?: boolean | Prisma.Employee$componentAssignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["employee"]>
 
@@ -680,6 +789,7 @@ export type EmployeeSelectScalar = {
 export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "employeeId" | "employeeIdKey" | "firstName" | "middleName" | "lastName" | "dateHired" | "isActive" | "version" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
 export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   salaryAssignments?: boolean | Prisma.Employee$salaryAssignmentsArgs<ExtArgs>
+  componentAssignments?: boolean | Prisma.Employee$componentAssignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EmployeeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -689,6 +799,7 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   name: "Employee"
   objects: {
     salaryAssignments: Prisma.$BasicSalaryAssignmentPayload<ExtArgs>[]
+    componentAssignments: Prisma.$EmployeeSalaryComponentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1097,6 +1208,7 @@ readonly fields: EmployeeFieldRefs;
 export interface Prisma__EmployeeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   salaryAssignments<T extends Prisma.Employee$salaryAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$salaryAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BasicSalaryAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  componentAssignments<T extends Prisma.Employee$componentAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$componentAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeSalaryComponentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1551,6 +1663,30 @@ export type Employee$salaryAssignmentsArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   distinct?: Prisma.BasicSalaryAssignmentScalarFieldEnum | Prisma.BasicSalaryAssignmentScalarFieldEnum[]
+}
+
+/**
+ * Employee.componentAssignments
+ */
+export type Employee$componentAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeSalaryComponent
+   */
+  select?: Prisma.EmployeeSalaryComponentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeSalaryComponent
+   */
+  omit?: Prisma.EmployeeSalaryComponentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeSalaryComponentInclude<ExtArgs> | null
+  where?: Prisma.EmployeeSalaryComponentWhereInput
+  orderBy?: Prisma.EmployeeSalaryComponentOrderByWithRelationInput | Prisma.EmployeeSalaryComponentOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeSalaryComponentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeSalaryComponentScalarFieldEnum | Prisma.EmployeeSalaryComponentScalarFieldEnum[]
 }
 
 /**
