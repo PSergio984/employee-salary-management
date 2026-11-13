@@ -11,4 +11,5 @@
 export type * from './models/AdminUser.js'
 export type * from './models/AuthSession.js'
 export type * from './models/Employee.js'
+export type * from './models/BasicSalaryAssignment.js'
 export type * from './commonInputTypes.js'

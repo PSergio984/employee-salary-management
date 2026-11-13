@@ -86,7 +86,8 @@ describe('Employee Onboarding Integration against Neon Test Database (Ticket 02)
     const { rawSecret } = await authService.createSession(admin.id);
     authCookie = `salary_session=${rawSecret}`;
 
-    // Clean up test employee table
+    // Clean up test employee and salary tables
+    await prisma.basicSalaryAssignment.deleteMany({});
     await prisma.employee.deleteMany({});
   });
 

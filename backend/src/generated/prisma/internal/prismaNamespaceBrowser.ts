@@ -53,7 +53,8 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   AdminUser: 'AdminUser',
   AuthSession: 'AuthSession',
-  Employee: 'Employee'
+  Employee: 'Employee',
+  BasicSalaryAssignment: 'BasicSalaryAssignment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -109,6 +110,18 @@ export const EmployeeScalarFieldEnum = {
 } as const
 
 export type EmployeeScalarFieldEnum = (typeof EmployeeScalarFieldEnum)[keyof typeof EmployeeScalarFieldEnum]
+
+
+export const BasicSalaryAssignmentScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  amount: 'amount',
+  isActive: 'isActive',
+  recordedAt: 'recordedAt',
+  endedAt: 'endedAt'
+} as const
+
+export type BasicSalaryAssignmentScalarFieldEnum = (typeof BasicSalaryAssignmentScalarFieldEnum)[keyof typeof BasicSalaryAssignmentScalarFieldEnum]
 
 
 export const SortOrder = {

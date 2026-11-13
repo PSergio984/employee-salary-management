@@ -56,3 +56,8 @@ export type AuthSession = Prisma.AuthSessionModel
  * 
  */
 export type Employee = Prisma.EmployeeModel
+/**
+ * Model BasicSalaryAssignment
+ * 
+ */
+export type BasicSalaryAssignment = Prisma.BasicSalaryAssignmentModel

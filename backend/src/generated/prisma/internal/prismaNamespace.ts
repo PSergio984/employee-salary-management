@@ -399,7 +399,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   AdminUser: 'AdminUser',
   AuthSession: 'AuthSession',
-  Employee: 'Employee'
+  Employee: 'Employee',
+  BasicSalaryAssignment: 'BasicSalaryAssignment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -415,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "adminUser" | "authSession" | "employee"
+    modelProps: "adminUser" | "authSession" | "employee" | "basicSalaryAssignment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -641,6 +642,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BasicSalaryAssignment: {
+      payload: Prisma.$BasicSalaryAssignmentPayload<ExtArgs>
+      fields: Prisma.BasicSalaryAssignmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BasicSalaryAssignmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasicSalaryAssignmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BasicSalaryAssignmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasicSalaryAssignmentPayload>
+        }
+        findFirst: {
+          args: Prisma.BasicSalaryAssignmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasicSalaryAssignmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BasicSalaryAssignmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasicSalaryAssignmentPayload>
+        }
+        findMany: {
+          args: Prisma.BasicSalaryAssignmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasicSalaryAssignmentPayload>[]
+        }
+        create: {
+          args: Prisma.BasicSalaryAssignmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasicSalaryAssignmentPayload>
+        }
+        createMany: {
+          args: Prisma.BasicSalaryAssignmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BasicSalaryAssignmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasicSalaryAssignmentPayload>[]
+        }
+        delete: {
+          args: Prisma.BasicSalaryAssignmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasicSalaryAssignmentPayload>
+        }
+        update: {
+          args: Prisma.BasicSalaryAssignmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasicSalaryAssignmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.BasicSalaryAssignmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BasicSalaryAssignmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BasicSalaryAssignmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasicSalaryAssignmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.BasicSalaryAssignmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BasicSalaryAssignmentPayload>
+        }
+        aggregate: {
+          args: Prisma.BasicSalaryAssignmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBasicSalaryAssignment>
+        }
+        groupBy: {
+          args: Prisma.BasicSalaryAssignmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BasicSalaryAssignmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BasicSalaryAssignmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BasicSalaryAssignmentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -719,6 +794,18 @@ export const EmployeeScalarFieldEnum = {
 export type EmployeeScalarFieldEnum = (typeof EmployeeScalarFieldEnum)[keyof typeof EmployeeScalarFieldEnum]
 
 
+export const BasicSalaryAssignmentScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  amount: 'amount',
+  isActive: 'isActive',
+  recordedAt: 'recordedAt',
+  endedAt: 'endedAt'
+} as const
+
+export type BasicSalaryAssignmentScalarFieldEnum = (typeof BasicSalaryAssignmentScalarFieldEnum)[keyof typeof BasicSalaryAssignmentScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -795,6 +882,20 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 
@@ -965,6 +1066,7 @@ export type GlobalOmitConfig = {
   adminUser?: Prisma.AdminUserOmit
   authSession?: Prisma.AuthSessionOmit
   employee?: Prisma.EmployeeOmit
+  basicSalaryAssignment?: Prisma.BasicSalaryAssignmentOmit
 }
 
 /* Types for Logging */

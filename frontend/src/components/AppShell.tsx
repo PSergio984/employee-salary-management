@@ -159,7 +159,7 @@ export const AppShell: React.FC = () => {
                 Employee Salary Management
               </span>
               <span className="ml-2.5 rounded bg-indigo-500/10 px-2 py-0.5 text-xs font-medium text-indigo-400 border border-indigo-500/20">
-                Ticket 02 • Onboarding Active
+                Ticket 03 • Basic Salary & Rates Active
               </span>
             </div>
           </div>
@@ -222,6 +222,7 @@ export const AppShell: React.FC = () => {
               void fetchEmployees();
             }}
             onEdit={handleOpenEditModal}
+            onEmployeeUpdated={(updated) => setSelectedEmployee(updated)}
           />
         ) : (
           <EmployeeDirectory
