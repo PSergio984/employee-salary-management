@@ -61,3 +61,16 @@ model BasicSalaryAssignment {
   @@index([employeeId])
   @@map("basic_salary_assignments")
 }
+
+model SalaryComponent {
+  id        Int      @id @default(autoincrement())
+  name      String
+  nameKey   String   @map("name_key")
+  isActive  Boolean  @default(true) @map("is_active")
+  version   Int      @default(1)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([nameKey])
+  @@map("salary_components")
+}

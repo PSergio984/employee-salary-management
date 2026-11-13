@@ -37,3 +37,8 @@ export type Employee = Prisma.EmployeeModel
  * 
  */
 export type BasicSalaryAssignment = Prisma.BasicSalaryAssignmentModel
+/**
+ * Model SalaryComponent
+ * 
+ */
+export type SalaryComponent = Prisma.SalaryComponentModel

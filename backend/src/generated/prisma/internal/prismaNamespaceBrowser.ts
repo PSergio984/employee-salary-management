@@ -54,7 +54,8 @@ export const ModelName = {
   AdminUser: 'AdminUser',
   AuthSession: 'AuthSession',
   Employee: 'Employee',
-  BasicSalaryAssignment: 'BasicSalaryAssignment'
+  BasicSalaryAssignment: 'BasicSalaryAssignment',
+  SalaryComponent: 'SalaryComponent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -122,6 +123,19 @@ export const BasicSalaryAssignmentScalarFieldEnum = {
 } as const
 
 export type BasicSalaryAssignmentScalarFieldEnum = (typeof BasicSalaryAssignmentScalarFieldEnum)[keyof typeof BasicSalaryAssignmentScalarFieldEnum]
+
+
+export const SalaryComponentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  nameKey: 'nameKey',
+  isActive: 'isActive',
+  version: 'version',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SalaryComponentScalarFieldEnum = (typeof SalaryComponentScalarFieldEnum)[keyof typeof SalaryComponentScalarFieldEnum]
 
 
 export const SortOrder = {

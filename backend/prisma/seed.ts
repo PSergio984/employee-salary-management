@@ -34,18 +34,43 @@ export async function seed(): Promise<void> {
 
     if (existingAdmin) {
       console.log(`Admin user "${username}" already exists. Skipping password reset.`);
-      return;
+    } else {
+      const passwordHash = await bcrypt.hash(password, 10);
+      const admin = await prisma.adminUser.create({
+        data: {
+          username,
+          passwordHash,
+        },
+      });
+      console.log(`Successfully created administrator "${admin.username}" (ID: ${admin.id}).`);
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
-    const admin = await prisma.adminUser.create({
-      data: {
-        username,
-        passwordHash,
-      },
-    });
+    // Seed example salary components if not already present
+    const exampleComponents = [
+      'Rice Allowance',
+      'Transportation Allowance',
+      'Clothing Allowance',
+      'Laundry Allowance',
+      'Medical Allowance',
+    ];
 
-    console.log(`Successfully created administrator "${admin.username}" (ID: ${admin.id}).`);
+    for (const name of exampleComponents) {
+      const nameKey = name.trim().toLowerCase();
+      const existing = await prisma.salaryComponent.findFirst({
+        where: { nameKey, isActive: true },
+      });
+      if (!existing) {
+        await prisma.salaryComponent.create({
+          data: {
+            name,
+            nameKey,
+            isActive: true,
+            version: 1,
+          },
+        });
+        console.log(`Created seed salary component: "${name}"`);
+      }
+    }
   } finally {
     await prisma.$disconnect();
   }

@@ -8,6 +8,7 @@ import { CsrfGuard } from './auth/guards/csrf.guard.js';
 import { SessionAuthGuard } from './auth/guards/session-auth.guard.js';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
 import { PrismaModule } from './prisma/prisma.module.js';
+import { SalaryComponentsModule } from './salary-components/salary-components.module.js';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PrismaModule } from './prisma/prisma.module.js';
     AuthModule,
     EmployeesModule,
     SalaryModule,
+    SalaryComponentsModule,
   ],
   providers: [
     // CsrfGuard validates origin and X-Salary-Client header on mutations first
