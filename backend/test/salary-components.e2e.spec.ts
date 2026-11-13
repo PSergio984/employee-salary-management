@@ -8,6 +8,40 @@ import bcrypt from 'bcryptjs';
 import { AppModule } from '../src/app.module.js';
 import { PrismaService } from '../src/prisma/prisma.service.js';
 
+/**
+ * Strict fail-closed validator for test database isolation.
+ * Prohibits generic fallback to DATABASE_URL and rejects runs where
+ * TEST_DATABASE_URL points to the development database.
+ */
+export function validateTestDatabaseTarget(
+  testDbUrl: string | undefined,
+  testDirectUrl: string | undefined,
+  devDbUrl: string | undefined,
+): { testDbUrl: string; testDirectUrl: string } {
+  if (!testDbUrl || testDbUrl.trim().length === 0) {
+    throw new Error(
+      'Safety violation: TEST_DATABASE_URL must be explicitly provided in test environment. Generic fallback is prohibited.',
+    );
+  }
+
+  if (!testDirectUrl || testDirectUrl.trim().length === 0) {
+    throw new Error(
+      'Safety violation: TEST_DIRECT_URL must be explicitly provided in test environment. Generic fallback is prohibited.',
+    );
+  }
+
+  if (devDbUrl && testDbUrl.trim() === devDbUrl.trim()) {
+    throw new Error(
+      'Safety violation: TEST_DATABASE_URL must be isolated and distinct from development DATABASE_URL.',
+    );
+  }
+
+  return {
+    testDbUrl: testDbUrl.trim(),
+    testDirectUrl: testDirectUrl.trim(),
+  };
+}
+
 describe('Salary Components Shared Catalog - Neon Real Database E2E', () => {
   let app: INestApplication;
   let prisma: PrismaService;
@@ -17,18 +51,12 @@ describe('Salary Components Shared Catalog - Neon Real Database E2E', () => {
   let authCookie: string;
 
   beforeAll(async () => {
-    const testDbUrl =
-      process.env.TEST_DATABASE_URL ||
-      (process.env.NODE_ENV === 'test' ? process.env.DATABASE_URL : undefined);
-    const testDirectUrl =
-      process.env.TEST_DIRECT_URL ||
-      (process.env.NODE_ENV === 'test' ? process.env.DIRECT_URL : undefined);
-
-    if (!testDbUrl || !testDirectUrl) {
-      throw new Error(
-        'TEST_DATABASE_URL and TEST_DIRECT_URL must be provided via environment.',
-      );
-    }
+    // Fail-closed target validation: strictly require explicit isolated test credentials
+    const { testDbUrl, testDirectUrl } = validateTestDatabaseTarget(
+      process.env.TEST_DATABASE_URL,
+      process.env.TEST_DIRECT_URL,
+      process.env.DATABASE_URL,
+    );
 
     process.env.DATABASE_URL = testDbUrl;
     process.env.DIRECT_URL = testDirectUrl;
@@ -526,6 +554,45 @@ describe('Salary Components Shared Catalog - Neon Real Database E2E', () => {
       expect(rows).toHaveLength(2);
       expect(rows[0].isActive).toBe(false);
       expect(rows[1].isActive).toBe(true);
+    });
+  });
+
+  describe('Isolated Test Target Safeguards (Fail-Closed)', () => {
+    it('fails closed when TEST_DATABASE_URL is missing or blank', () => {
+      expect(() =>
+        validateTestDatabaseTarget(undefined, 'postgresql://direct', 'postgresql://dev'),
+      ).toThrow('Safety violation: TEST_DATABASE_URL must be explicitly provided');
+
+      expect(() =>
+        validateTestDatabaseTarget('   ', 'postgresql://direct', 'postgresql://dev'),
+      ).toThrow('Safety violation: TEST_DATABASE_URL must be explicitly provided');
+    });
+
+    it('fails closed when TEST_DIRECT_URL is missing or blank', () => {
+      expect(() =>
+        validateTestDatabaseTarget('postgresql://test', undefined, 'postgresql://dev'),
+      ).toThrow('Safety violation: TEST_DIRECT_URL must be explicitly provided');
+
+      expect(() =>
+        validateTestDatabaseTarget('postgresql://test', '   ', 'postgresql://dev'),
+      ).toThrow('Safety violation: TEST_DIRECT_URL must be explicitly provided');
+    });
+
+    it('fails closed when TEST_DATABASE_URL targets development database', () => {
+      const devUrl = 'postgresql://neondb_owner:secret@host/neondb?sslmode=require';
+      expect(() =>
+        validateTestDatabaseTarget(devUrl, 'postgresql://direct', devUrl),
+      ).toThrow('Safety violation: TEST_DATABASE_URL must be isolated and distinct');
+    });
+
+    it('approves properly isolated test credentials', () => {
+      const result = validateTestDatabaseTarget(
+        'postgresql://neondb_owner:secret@host/neondb_test?sslmode=require',
+        'postgresql://neondb_owner:secret@direct/neondb_test?sslmode=require',
+        'postgresql://neondb_owner:secret@host/neondb?sslmode=require',
+      );
+      expect(result.testDbUrl).toContain('neondb_test');
+      expect(result.testDirectUrl).toContain('neondb_test');
     });
   });
 });

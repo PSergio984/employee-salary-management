@@ -366,15 +366,16 @@ export const ComponentCatalog: React.FC = () => {
         )}
       </div>
 
-      {/* Create / Edit Dialog */}
-      <ComponentDialog
-        key={`${dialogMode}-${selectedComponent?.id || 'new'}`}
-        isOpen={isDialogOpen}
-        mode={dialogMode}
-        component={selectedComponent}
-        onClose={() => setIsDialogOpen(false)}
-        onSuccess={handleDialogSuccess}
-      />
+      {/* Create / Edit Dialog - conditionally mounted only when open to guarantee clean per-open initialization */}
+      {isDialogOpen && (
+        <ComponentDialog
+          isOpen={isDialogOpen}
+          mode={dialogMode}
+          component={selectedComponent}
+          onClose={() => setIsDialogOpen(false)}
+          onSuccess={handleDialogSuccess}
+        />
+      )}
     </div>
   );
 };
