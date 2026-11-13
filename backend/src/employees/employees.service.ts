@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { ArchiveEmployeeDto } from './dto/archive-employee.dto.js';
 import { CreateEmployeeDto } from './dto/create-employee.dto.js';
 import { QueryEmployeesDto } from './dto/query-employees.dto.js';
 import { UpdateEmployeeDto } from './dto/update-employee.dto.js';
@@ -212,9 +213,10 @@ export class EmployeesService {
 
     const where: Prisma.EmployeeWhereInput = {};
 
-    if (query.status === 'active') {
+    const status = query.status || 'active';
+    if (status === 'active') {
       where.isActive = true;
-    } else if (query.status === 'archived') {
+    } else if (status === 'archived') {
       where.isActive = false;
     }
 
@@ -272,104 +274,47 @@ export class EmployeesService {
     id: number,
     dto: UpdateEmployeeDto,
   ): Promise<FormattedEmployee> {
-    const employee = await this.prisma.employee.findUnique({
-      where: { id },
-    });
+    return this.prisma.$transaction(async (tx) => {
+      const lockedEmployees = await tx.$queryRaw<
+        Array<{
+          id: number;
+          employee_id: string;
+          employee_id_key: string;
+          first_name: string;
+          middle_name: string | null;
+          last_name: string;
+          date_hired: Date;
+          is_active: boolean;
+          version: number;
+        }>
+      >`
+        SELECT id, employee_id, employee_id_key, first_name, middle_name, last_name, date_hired, is_active, version
+        FROM employees
+        WHERE id = ${id}
+        FOR UPDATE;
+      `;
 
-    if (!employee) {
-      throw new NotFoundException({
-        error: {
-          code: 'EMPLOYEE_NOT_FOUND',
-          message: `Employee with ID ${id} was not found`,
-        },
-      });
-    }
-
-    // Optimistic Concurrency Control: reject stale edits
-    if (employee.version !== dto.expectedVersion) {
-      throw new ConflictException({
-        error: {
-          code: 'VERSION_CONFLICT',
-          message:
-            'Employee record has been modified by another request. Please reload and review the latest changes.',
-        },
-      });
-    }
-
-    const updateData: Prisma.EmployeeUpdateInput = {
-      version: { increment: 1 },
-    };
-
-    if (dto.employeeId !== undefined) {
-      const trimmedId = dto.employeeId.trim();
-      if (!trimmedId) {
-        throw new BadRequestException({
+      if (!lockedEmployees || lockedEmployees.length === 0) {
+        throw new NotFoundException({
           error: {
-            code: 'INVALID_EMPLOYEE_ID',
-            message: 'Employee ID cannot be empty',
+            code: 'EMPLOYEE_NOT_FOUND',
+            message: `Employee with ID ${id} was not found`,
           },
         });
       }
-      const newKey = this.normalizeEmployeeIdKey(trimmedId);
-      if (newKey !== employee.employeeIdKey) {
-        const existingKey = await this.prisma.employee.findUnique({
-          where: { employeeIdKey: newKey },
+
+      const lockedEmp = lockedEmployees[0];
+
+      if (!lockedEmp.is_active) {
+        throw new ConflictException({
+          error: {
+            code: 'EMPLOYEE_ARCHIVED',
+            message: 'Cannot update an archived employee',
+          },
         });
-        if (existingKey && existingKey.id !== id) {
-          throw new ConflictException({
-            error: {
-              code: 'DUPLICATE_EMPLOYEE_ID',
-              message: `Employee ID "${trimmedId}" already exists.`,
-            },
-          });
-        }
       }
-      updateData.employeeId = trimmedId;
-      updateData.employeeIdKey = newKey;
-    }
 
-    if (dto.firstName !== undefined) {
-      updateData.firstName = this.validateName(dto.firstName, 'First name');
-    }
-
-    if (dto.lastName !== undefined) {
-      updateData.lastName = this.validateName(dto.lastName, 'Last name');
-    }
-
-    if (dto.middleName !== undefined) {
-      updateData.middleName = dto.middleName?.trim()
-        ? this.validateName(dto.middleName, 'Middle name')
-        : null;
-    }
-
-    if (dto.dateHired !== undefined) {
-      updateData.dateHired = this.validateDateHired(dto.dateHired);
-    }
-
-    try {
-      const updateResult = await this.prisma.employee.updateMany({
-        where: {
-          id,
-          version: dto.expectedVersion,
-        },
-        data: updateData,
-      });
-
-      if (updateResult.count === 0) {
-        const current = await this.prisma.employee.findUnique({
-          where: { id },
-          select: { id: true, version: true },
-        });
-
-        if (!current) {
-          throw new NotFoundException({
-            error: {
-              code: 'EMPLOYEE_NOT_FOUND',
-              message: `Employee with ID ${id} was not found`,
-            },
-          });
-        }
-
+      if (lockedEmp.version !== dto.expectedVersion) {
         throw new ConflictException({
           error: {
             code: 'VERSION_CONFLICT',
@@ -379,24 +324,134 @@ export class EmployeesService {
         });
       }
 
-      const updated = await this.prisma.employee.findUniqueOrThrow({
-        where: { id },
-      });
+      const updateData: Prisma.EmployeeUpdateInput = {
+        version: lockedEmp.version + 1,
+      };
 
-      return this.formatEmployee(updated);
-    } catch (err) {
-      if (
-        err instanceof Prisma.PrismaClientKnownRequestError &&
-        err.code === 'P2002'
-      ) {
-        throw new ConflictException({
+      if (dto.employeeId !== undefined) {
+        const trimmedId = dto.employeeId.trim();
+        if (!trimmedId) {
+          throw new BadRequestException({
+            error: {
+              code: 'INVALID_EMPLOYEE_ID',
+              message: 'Employee ID cannot be empty',
+            },
+          });
+        }
+        const newKey = this.normalizeEmployeeIdKey(trimmedId);
+        if (newKey !== lockedEmp.employee_id_key) {
+          const existingKey = await tx.employee.findUnique({
+            where: { employeeIdKey: newKey },
+          });
+          if (existingKey && existingKey.id !== id) {
+            throw new ConflictException({
+              error: {
+                code: 'DUPLICATE_EMPLOYEE_ID',
+                message: `Employee ID "${trimmedId}" already exists.`,
+              },
+            });
+          }
+        }
+        updateData.employeeId = trimmedId;
+        updateData.employeeIdKey = newKey;
+      }
+
+      if (dto.firstName !== undefined) {
+        updateData.firstName = this.validateName(dto.firstName, 'First name');
+      }
+
+      if (dto.lastName !== undefined) {
+        updateData.lastName = this.validateName(dto.lastName, 'Last name');
+      }
+
+      if (dto.middleName !== undefined) {
+        updateData.middleName = dto.middleName?.trim()
+          ? this.validateName(dto.middleName, 'Middle name')
+          : null;
+      }
+
+      if (dto.dateHired !== undefined) {
+        updateData.dateHired = this.validateDateHired(dto.dateHired);
+      }
+
+      try {
+        const updated = await tx.employee.update({
+          where: { id },
+          data: updateData,
+        });
+
+        return this.formatEmployee(updated);
+      } catch (err) {
+        if (
+          err instanceof Prisma.PrismaClientKnownRequestError &&
+          err.code === 'P2002'
+        ) {
+          throw new ConflictException({
+            error: {
+              code: 'DUPLICATE_EMPLOYEE_ID',
+              message: `Employee ID already exists.`,
+            },
+          });
+        }
+        throw err;
+      }
+    });
+  }
+
+  async archiveEmployee(
+    id: number,
+    dto: ArchiveEmployeeDto,
+  ): Promise<FormattedEmployee> {
+    return this.prisma.$transaction(async (tx) => {
+      const lockedEmployees = await tx.$queryRaw<
+        Array<{ id: number; version: number; is_active: boolean }>
+      >`
+        SELECT id, version, is_active
+        FROM employees
+        WHERE id = ${id}
+        FOR UPDATE;
+      `;
+
+      if (!lockedEmployees || lockedEmployees.length === 0) {
+        throw new NotFoundException({
           error: {
-            code: 'DUPLICATE_EMPLOYEE_ID',
-            message: `Employee ID already exists.`,
+            code: 'EMPLOYEE_NOT_FOUND',
+            message: `Employee with ID ${id} was not found`,
           },
         });
       }
-      throw err;
-    }
+
+      const lockedEmp = lockedEmployees[0];
+
+      if (!lockedEmp.is_active) {
+        throw new ConflictException({
+          error: {
+            code: 'EMPLOYEE_ALREADY_ARCHIVED',
+            message: 'Employee is already archived',
+          },
+        });
+      }
+
+      if (dto.expectedVersion !== lockedEmp.version) {
+        throw new ConflictException({
+          error: {
+            code: 'VERSION_CONFLICT',
+            message:
+              'Employee record has been modified by another request. Please reload and review the latest changes.',
+          },
+        });
+      }
+
+      const nextVersion = lockedEmp.version + 1;
+      const updated = await tx.employee.update({
+        where: { id },
+        data: {
+          isActive: false,
+          version: nextVersion,
+        },
+      });
+
+      return this.formatEmployee(updated);
+    });
   }
 }

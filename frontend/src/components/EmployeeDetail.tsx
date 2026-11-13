@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Employee } from '../types/employee.js';
 import { useEmployeeSalaryViewModel } from '../viewmodels/useEmployeeSalaryViewModel.js';
+import { archiveEmployeeApi } from '../api/employees.js';
 import {
+  Archive,
   ArrowLeft,
   Calendar,
   Coins,
@@ -28,6 +30,7 @@ interface EmployeeDetailProps {
   onBack: () => void;
   onEdit: (employee: Employee) => void;
   onEmployeeUpdated?: (employee: Employee) => void;
+  onArchive?: (id: number, expectedVersion: number) => Promise<Employee>;
 }
 
 export const EmployeeDetail: React.FC<EmployeeDetailProps> = ({
@@ -35,7 +38,13 @@ export const EmployeeDetail: React.FC<EmployeeDetailProps> = ({
   onBack,
   onEdit,
   onEmployeeUpdated,
+  onArchive,
 }) => {
+  const [isArchiveDialogOpen, setIsArchiveDialogOpen] = useState(false);
+  const [isArchiving, setIsArchiving] = useState(false);
+  const [archiveError, setArchiveError] = useState<string | null>(null);
+  const [archiveSuccessMsg, setArchiveSuccessMsg] = useState<string | null>(null);
+
   const {
     activeTab,
     setActiveTab,
@@ -133,6 +142,31 @@ export const EmployeeDetail: React.FC<EmployeeDetailProps> = ({
 
   const hasBasicSalary = Boolean(currentSalary);
 
+  const handleConfirmArchive = async () => {
+    setIsArchiving(true);
+    setArchiveError(null);
+    try {
+      let updated: Employee;
+      if (onArchive) {
+        updated = await onArchive(employee.id, employee.version);
+      } else {
+        updated = await archiveEmployeeApi(employee.id, employee.version);
+      }
+      setIsArchiveDialogOpen(false);
+      setArchiveSuccessMsg(
+        `Employee ${employee.employeeId} (${fullName}) has been archived. All records are retained in read-only mode.`,
+      );
+      if (onEmployeeUpdated) {
+        onEmployeeUpdated(updated);
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Failed to archive employee';
+      setArchiveError(msg);
+    } finally {
+      setIsArchiving(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Breadcrumb & Navigation */}
@@ -145,15 +179,57 @@ export const EmployeeDetail: React.FC<EmployeeDetailProps> = ({
           <span>Back to Directory</span>
         </button>
 
-        <button
-          onClick={() => onEdit(employee)}
-          disabled={!employee.isActive}
-          className="flex items-center gap-2 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          <Edit3 className="h-3.5 w-3.5" />
-          <span>Edit Profile</span>
-        </button>
+        {employee.isActive && (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                setArchiveError(null);
+                setIsArchiveDialogOpen(true);
+              }}
+              className="flex items-center gap-1.5 rounded-lg border border-amber-600/40 bg-amber-950/30 px-3 py-1.5 text-xs font-semibold text-amber-300 transition hover:bg-amber-900/50 hover:text-amber-100"
+              title="Archive Employee Record"
+            >
+              <Archive className="h-3.5 w-3.5 text-amber-400" />
+              <span>Archive Employee</span>
+            </button>
+
+            <button
+              onClick={() => onEdit(employee)}
+              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-500"
+            >
+              <Edit3 className="h-3.5 w-3.5" />
+              <span>Edit Profile</span>
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* Archived Status Read-Only Alert */}
+      {!employee.isActive && (
+        <div
+          role="status"
+          className="rounded-xl border border-amber-500/30 bg-amber-950/30 p-4 text-xs text-amber-200 flex items-start gap-3 shadow-sm"
+        >
+          <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
+          <div className="space-y-1">
+            <p className="font-semibold text-amber-300">Archived Employee Record</p>
+            <p className="text-amber-200/90 leading-relaxed">
+              This employee is archived. Basic salary, assigned components, statutory rate calculations, and history are preserved in read-only mode. Further profile updates, salary modifications, and component assignments are disabled.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Success Notification */}
+      {archiveSuccessMsg && (
+        <div
+          role="status"
+          className="flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-950/40 p-3 text-xs text-emerald-300 shadow-sm"
+        >
+          <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+          <span>{archiveSuccessMsg}</span>
+        </div>
+      )}
 
       {/* Employee Identity Hero Card */}
       <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 shadow-sm">
@@ -362,51 +438,70 @@ export const EmployeeDetail: React.FC<EmployeeDetailProps> = ({
               </div>
             )}
 
-            <form onSubmit={handleSaveSalary} className="space-y-4">
-              <div>
-                <label htmlFor="basic-amount" className="block text-xs font-medium text-slate-300">
-                  Monthly Basic Amount (PHP) <span className="text-red-400">*</span>
-                </label>
-                <div className="relative mt-1.5">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 text-xs font-semibold">
-                    ₱
-                  </div>
-                  <input
-                    id="basic-amount"
-                    type="text"
-                    required
-                    disabled={isSavingSalary || !employee.isActive}
-                    value={amountInput}
-                    onChange={(e) => setAmountInput(e.target.value)}
-                    placeholder="20000.00"
-                    className="block w-full rounded-lg border border-slate-700 bg-slate-950 py-2.5 pl-8 pr-3 text-sm text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
-                  />
-                </div>
-                {amountError && (
-                  <p className="mt-1.5 text-xs text-red-400">{amountError}</p>
-                )}
-                <p className="mt-1.5 text-[11px] text-slate-400">
-                  Non-negative numeric amount up to 2 decimal places. Explicit zero qualifies as an assigned salary.
+            {!employee.isActive ? (
+              <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-4 text-xs text-slate-400 space-y-2">
+                <p className="text-slate-300 font-medium">
+                  Basic Salary is read-only because this employee is archived.
                 </p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-slate-400">Current Retained Amount:</span>
+                  <span className="text-base font-bold text-emerald-400">
+                    {currentSalary ? formatPeso(currentSalary.amount) : 'Unassigned'}
+                  </span>
+                </div>
+                {currentSalary && (
+                  <p className="text-[11px] text-slate-500">
+                    Recorded at {formatManilaDateTime(currentSalary.recordedAt)}
+                  </p>
+                )}
               </div>
-
-              <div className="flex justify-end pt-2">
-                <button
-                  type="submit"
-                  disabled={isSavingSalary || !employee.isActive}
-                  className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
-                >
-                  {isSavingSalary ? (
-                    <>
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                      <span>Saving Salary...</span>
-                    </>
-                  ) : (
-                    <span>{currentSalary ? 'Save New Salary' : 'Assign Initial Salary'}</span>
+            ) : (
+              <form onSubmit={handleSaveSalary} className="space-y-4">
+                <div>
+                  <label htmlFor="basic-amount" className="block text-xs font-medium text-slate-300">
+                    Monthly Basic Amount (PHP) <span className="text-red-400">*</span>
+                  </label>
+                  <div className="relative mt-1.5">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 text-xs font-semibold">
+                      ₱
+                    </div>
+                    <input
+                      id="basic-amount"
+                      type="text"
+                      required
+                      disabled={isSavingSalary}
+                      value={amountInput}
+                      onChange={(e) => setAmountInput(e.target.value)}
+                      placeholder="20000.00"
+                      className="block w-full rounded-lg border border-slate-700 bg-slate-950 py-2.5 pl-8 pr-3 text-sm text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
+                    />
+                  </div>
+                  {amountError && (
+                    <p className="mt-1.5 text-xs text-red-400">{amountError}</p>
                   )}
-                </button>
-              </div>
-            </form>
+                  <p className="mt-1.5 text-[11px] text-slate-400">
+                    Non-negative numeric amount up to 2 decimal places. Explicit zero qualifies as an assigned salary.
+                  </p>
+                </div>
+
+                <div className="flex justify-end pt-2">
+                  <button
+                    type="submit"
+                    disabled={isSavingSalary}
+                    className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
+                  >
+                    {isSavingSalary ? (
+                      <>
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        <span>Saving Salary...</span>
+                      </>
+                    ) : (
+                      <span>{currentSalary ? 'Save New Salary' : 'Assign Initial Salary'}</span>
+                    )}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}
@@ -438,20 +533,22 @@ export const EmployeeDetail: React.FC<EmployeeDetailProps> = ({
                 <span>Refresh</span>
               </button>
 
-              <button
-                type="button"
-                onClick={handleOpenAddDialog}
-                disabled={!hasBasicSalary || !employee.isActive}
-                title={
-                  !hasBasicSalary
-                    ? 'Basic salary must be assigned before assigning components'
-                    : undefined
-                }
-                className="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                <Plus className="h-4 w-4" />
-                <span>Assign Component</span>
-              </button>
+              {employee.isActive && (
+                <button
+                  type="button"
+                  onClick={handleOpenAddDialog}
+                  disabled={!hasBasicSalary}
+                  title={
+                    !hasBasicSalary
+                      ? 'Basic salary must be assigned before assigning components'
+                      : undefined
+                  }
+                  className="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Assign Component</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -528,26 +625,28 @@ export const EmployeeDetail: React.FC<EmployeeDetailProps> = ({
                         {formatManilaDateTime(comp.recordedAt)}
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            type="button"
-                            onClick={() => handleOpenEditComponent(comp)}
-                            disabled={!employee.isActive}
-                            className="flex items-center gap-1 rounded border border-slate-700 bg-slate-800 px-2.5 py-1 text-xs text-slate-200 hover:bg-slate-700 disabled:opacity-40"
-                          >
-                            <Edit2 className="h-3 w-3 text-indigo-400" />
-                            <span>Edit</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleOpenRemoveComponent(comp)}
-                            disabled={!employee.isActive}
-                            className="flex items-center gap-1 rounded border border-red-900/40 bg-red-950/40 px-2.5 py-1 text-xs text-red-300 hover:bg-red-900/60 disabled:opacity-40"
-                          >
-                            <Trash2 className="h-3 w-3 text-red-400" />
-                            <span>Remove</span>
-                          </button>
-                        </div>
+                        {employee.isActive ? (
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEditComponent(comp)}
+                              className="flex items-center gap-1 rounded border border-slate-700 bg-slate-800 px-2.5 py-1 text-xs text-slate-200 hover:bg-slate-700"
+                            >
+                              <Edit2 className="h-3 w-3 text-indigo-400" />
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleOpenRemoveComponent(comp)}
+                              className="flex items-center gap-1 rounded border border-red-900/40 bg-red-950/40 px-2.5 py-1 text-xs text-red-300 hover:bg-red-900/60"
+                            >
+                              <Trash2 className="h-3 w-3 text-red-400" />
+                              <span>Remove</span>
+                            </button>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-slate-500 font-mono">Read-only</span>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -1132,6 +1231,90 @@ export const EmployeeDetail: React.FC<EmployeeDetailProps> = ({
                 </table>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ARCHIVE CONFIRMATION MODAL */}
+      {isArchiveDialogOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm"
+        >
+          <div className="w-full max-w-md rounded-xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                  <Archive className="h-4 w-4" />
+                </div>
+                <h3 className="text-base font-semibold text-white">Archive Employee</h3>
+              </div>
+              <button
+                onClick={() => setIsArchiveDialogOpen(false)}
+                disabled={isArchiving}
+                className="rounded p-1 text-slate-400 hover:bg-slate-800 hover:text-white"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="mt-4 space-y-3 text-xs text-slate-300">
+              <p>
+                Are you sure you want to archive employee{' '}
+                <strong className="text-white">{fullName}</strong> (
+                <span className="font-mono text-indigo-300">{employee.employeeId}</span>)?
+              </p>
+              <div className="rounded-lg border border-amber-500/30 bg-amber-950/30 p-3 text-amber-200">
+                <span className="font-semibold text-amber-300">Record Retention:</span> Archiving
+                places this employee in read-only status. All basic salary records, assigned
+                components, and historical audit logs will be permanently retained intact, but no
+                further profile updates, salary modifications, or component assignments can be made.
+              </div>
+              <div className="flex justify-between items-center text-[11px] text-slate-500 pt-1">
+                <span>Concurrency check</span>
+                <span className="font-mono text-slate-400">Target version v{employee.version}</span>
+              </div>
+            </div>
+
+            {archiveError && (
+              <div
+                role="alert"
+                className="mt-4 flex items-start gap-2.5 rounded-lg border border-red-500/40 bg-red-950/50 p-3 text-xs text-red-200"
+              >
+                <AlertCircle className="h-4 w-4 shrink-0 text-red-400 mt-0.5" />
+                <div className="flex-1 font-medium">{archiveError}</div>
+              </div>
+            )}
+
+            <div className="mt-6 flex justify-end gap-3 border-t border-slate-800 pt-4">
+              <button
+                type="button"
+                onClick={() => setIsArchiveDialogOpen(false)}
+                disabled={isArchiving}
+                className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-slate-700"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmArchive}
+                disabled={isArchiving}
+                className="flex items-center gap-1.5 rounded-lg bg-amber-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-50"
+              >
+                {isArchiving ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <span>Archiving...</span>
+                  </>
+                ) : (
+                  <>
+                    <Archive className="h-3.5 w-3.5" />
+                    <span>Confirm Archive</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}

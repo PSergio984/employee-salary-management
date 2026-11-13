@@ -10,6 +10,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { ArchiveEmployeeDto } from './dto/archive-employee.dto.js';
 import { CreateEmployeeDto } from './dto/create-employee.dto.js';
 import { QueryEmployeesDto } from './dto/query-employees.dto.js';
 import { UpdateEmployeeDto } from './dto/update-employee.dto.js';
@@ -41,5 +42,14 @@ export class EmployeesController {
     @Body() updateDto: UpdateEmployeeDto,
   ) {
     return this.employeesService.updateEmployee(id, updateDto);
+  }
+
+  @Post(':id/archive')
+  @HttpCode(HttpStatus.OK)
+  async archive(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() archiveDto: ArchiveEmployeeDto,
+  ) {
+    return this.employeesService.archiveEmployee(id, archiveDto);
   }
 }

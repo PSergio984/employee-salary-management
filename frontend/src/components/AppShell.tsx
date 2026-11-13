@@ -43,6 +43,7 @@ export const AppShell: React.FC = () => {
     handleOpenEditModal,
     handleCloseModal,
     handleModalSuccess,
+    handleArchiveEmployee,
     handleRefreshSelectedEmployee,
     handleSearchChange,
     handleStatusFilterChange,
@@ -97,7 +98,7 @@ export const AppShell: React.FC = () => {
                 Employee Salary Management
               </span>
               <span className="ml-2.5 rounded bg-indigo-500/10 px-2 py-0.5 text-xs font-medium text-indigo-400 border border-indigo-500/20">
-                Ticket 03 & 04 • Integrated
+                Ticket 05 & 06 • Integrated
               </span>
             </div>
           </div>
@@ -193,6 +194,7 @@ export const AppShell: React.FC = () => {
               }}
               onEdit={handleOpenEditModal}
               onEmployeeUpdated={(updated) => setSelectedEmployee(updated)}
+              onArchive={handleArchiveEmployee}
             />
           ) : (
             <EmployeeDirectory

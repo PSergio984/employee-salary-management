@@ -52,3 +52,13 @@ export async function updateEmployeeApi(
     body: JSON.stringify(payload),
   });
 }
+
+export async function archiveEmployeeApi(
+  id: number,
+  expectedVersion: number,
+): Promise<Employee> {
+  return apiClient<Employee>(`/api/employees/${id}/archive`, {
+    method: 'POST',
+    body: JSON.stringify({ expectedVersion }),
+  });
+}

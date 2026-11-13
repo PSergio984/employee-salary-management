@@ -150,7 +150,12 @@ export class SalaryService {
 
       const lockedEmp = lockedEmployees[0];
       if (!lockedEmp.is_active) {
-        throw new ConflictException('Cannot assign or update salary for an archived employee');
+        throw new ConflictException({
+          error: {
+            code: 'EMPLOYEE_ARCHIVED',
+            message: 'Cannot assign or update salary for an archived employee',
+          },
+        });
       }
 
       if (lockedEmp.version !== dto.expectedVersion) {
@@ -361,7 +366,12 @@ export class SalaryService {
       }
       const lockedEmp = lockedEmployees[0];
       if (!lockedEmp.is_active) {
-        throw new BadRequestException('Cannot assign component to an archived employee');
+        throw new ConflictException({
+          error: {
+            code: 'EMPLOYEE_ARCHIVED',
+            message: 'Cannot assign component to an archived employee',
+          },
+        });
       }
 
       if (lockedEmp.version !== dto.expectedVersion) {
@@ -469,7 +479,12 @@ export class SalaryService {
       }
       const lockedEmp = lockedEmployees[0];
       if (!lockedEmp.is_active) {
-        throw new BadRequestException('Cannot modify component of an archived employee');
+        throw new ConflictException({
+          error: {
+            code: 'EMPLOYEE_ARCHIVED',
+            message: 'Cannot modify component of an archived employee',
+          },
+        });
       }
 
       if (lockedEmp.version !== dto.expectedVersion) {
@@ -589,7 +604,12 @@ export class SalaryService {
       }
       const lockedEmp = lockedEmployees[0];
       if (!lockedEmp.is_active) {
-        throw new BadRequestException('Cannot remove component from an archived employee');
+        throw new ConflictException({
+          error: {
+            code: 'EMPLOYEE_ARCHIVED',
+            message: 'Cannot remove component from an archived employee',
+          },
+        });
       }
 
       if (lockedEmp.version !== dto.expectedVersion) {

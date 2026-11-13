@@ -222,13 +222,15 @@ export const EmployeeDirectory: React.FC<EmployeeDirectoryProps> = ({
                             <Eye className="h-3.5 w-3.5" />
                             <span>View</span>
                           </button>
-                          <button
-                            onClick={() => onEditEmployee(emp)}
-                            className="flex items-center gap-1 rounded bg-slate-800 px-2.5 py-1 text-xs font-medium text-indigo-300 hover:bg-indigo-950/60 hover:text-indigo-200"
-                            title="Edit Employee Information"
-                          >
-                            <span>Edit</span>
-                          </button>
+                          {emp.isActive && (
+                            <button
+                              onClick={() => onEditEmployee(emp)}
+                              className="flex items-center gap-1 rounded bg-slate-800 px-2.5 py-1 text-xs font-medium text-indigo-300 hover:bg-indigo-950/60 hover:text-indigo-200"
+                              title="Edit Employee Information"
+                            >
+                              <span>Edit</span>
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>

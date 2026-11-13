@@ -3,6 +3,7 @@ import { Employee } from '../types/employee.js';
 import {
   getEmployeesApi,
   getEmployeeByIdApi,
+  archiveEmployeeApi,
 } from '../api/employees.js';
 
 export function useEmployeesViewModel() {
@@ -115,6 +116,16 @@ export function useEmployeesViewModel() {
     setPage(1);
   }, []);
 
+  const handleArchiveEmployee = useCallback(
+    async (id: number, expectedVersion: number): Promise<Employee> => {
+      const archived = await archiveEmployeeApi(id, expectedVersion);
+      setSelectedEmployee(archived);
+      void fetchEmployees();
+      return archived;
+    },
+    [fetchEmployees],
+  );
+
   const handleStatusFilterChange = useCallback((newStatus: 'active' | 'archived' | 'all') => {
     setStatusFilter(newStatus);
     setPage(1);
@@ -140,6 +151,7 @@ export function useEmployeesViewModel() {
     handleOpenEditModal,
     handleCloseModal,
     handleModalSuccess,
+    handleArchiveEmployee,
     handleRefreshSelectedEmployee,
     handleSearchChange,
     handleStatusFilterChange,
