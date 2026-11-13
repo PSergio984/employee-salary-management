@@ -348,5 +348,45 @@ describe('Employee Onboarding Integration against Neon Test Database (Ticket 02)
       expect(staleRes.status).toBe(409);
       expect(staleRes.body.error?.code).toBe('VERSION_CONFLICT');
     });
+
+    it('handles concurrent updates with the same expectedVersion: exactly one 200 and one 409', async () => {
+      const createRes = await request(app.getHttpServer())
+        .post('/api/employees')
+        .set('Cookie', authCookie)
+        .set('X-Salary-Client', 'web')
+        .set('Origin', testClientOrigin)
+        .send({
+          employeeId: 'EMP-CONCUR-01',
+          firstName: 'Concurrency',
+          lastName: 'Tester',
+          dateHired: '2026-01-01',
+        });
+      expect(createRes.status).toBe(201);
+      const empId = createRes.body.id;
+      const initialVersion = createRes.body.version;
+
+      const [res1, res2] = await Promise.all([
+        request(app.getHttpServer())
+          .patch(`/api/employees/${empId}`)
+          .set('Cookie', authCookie)
+          .set('X-Salary-Client', 'web')
+          .set('Origin', testClientOrigin)
+          .send({ firstName: 'WinnerA', expectedVersion: initialVersion }),
+        request(app.getHttpServer())
+          .patch(`/api/employees/${empId}`)
+          .set('Cookie', authCookie)
+          .set('X-Salary-Client', 'web')
+          .set('Origin', testClientOrigin)
+          .send({ firstName: 'WinnerB', expectedVersion: initialVersion }),
+      ]);
+
+      const statuses = [res1.status, res2.status].sort();
+      expect(statuses).toEqual([200, 409]);
+
+      const finalEmp = await prisma.employee.findUnique({
+        where: { id: empId },
+      });
+      expect(finalEmp!.version).toBe(initialVersion + 1);
+    });
   });
 });

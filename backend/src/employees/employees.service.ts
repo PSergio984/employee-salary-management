@@ -347,9 +347,40 @@ export class EmployeesService {
     }
 
     try {
-      const updated = await this.prisma.employee.update({
-        where: { id },
+      const updateResult = await this.prisma.employee.updateMany({
+        where: {
+          id,
+          version: dto.expectedVersion,
+        },
         data: updateData,
+      });
+
+      if (updateResult.count === 0) {
+        const current = await this.prisma.employee.findUnique({
+          where: { id },
+          select: { id: true, version: true },
+        });
+
+        if (!current) {
+          throw new NotFoundException({
+            error: {
+              code: 'EMPLOYEE_NOT_FOUND',
+              message: `Employee with ID ${id} was not found`,
+            },
+          });
+        }
+
+        throw new ConflictException({
+          error: {
+            code: 'VERSION_CONFLICT',
+            message:
+              'Employee record has been modified by another request. Please reload and review the latest changes.',
+          },
+        });
+      }
+
+      const updated = await this.prisma.employee.findUniqueOrThrow({
+        where: { id },
       });
 
       return this.formatEmployee(updated);
