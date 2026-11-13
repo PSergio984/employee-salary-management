@@ -29,3 +29,20 @@ model AuthSession {
   @@index([adminUserId])
   @@map("auth_sessions")
 }
+
+model Employee {
+  id            Int      @id @default(autoincrement())
+  employeeId    String   @map("employee_id")
+  employeeIdKey String   @unique @map("employee_id_key")
+  firstName     String   @map("first_name")
+  middleName    String?  @map("middle_name")
+  lastName      String   @map("last_name")
+  dateHired     DateTime @map("date_hired") @db.Date
+  isActive      Boolean  @default(true) @map("is_active")
+  version       Int      @default(1)
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([lastName, firstName])
+  @@map("employees")
+}

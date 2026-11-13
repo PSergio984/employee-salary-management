@@ -1,21 +1,89 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../context/useAuth.js';
+import { Employee } from '../types/employee.js';
 import {
-  LogOut,
-  ShieldCheck,
-  User,
-  Clock,
-  Database,
-  CheckCircle2,
-  Lock,
-  Layers,
+  createEmployeeApi,
+  getEmployeeByIdApi,
+  getEmployeesApi,
+  updateEmployeeApi,
+} from '../api/employees.js';
+import { EmployeeDirectory } from './EmployeeDirectory.js';
+import { EmployeeDetail } from './EmployeeDetail.js';
+import { EmployeeModal } from './EmployeeModal.js';
+import {
   AlertTriangle,
+  Clock,
+  Layers,
+  LogOut,
+  User,
 } from 'lucide-react';
 
 export const AppShell: React.FC = () => {
   const { user, expiresAt, logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
+
+  // Employee Directory state
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [total, setTotal] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
+  const [pageSize] = useState<number>(20);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [search, setSearch] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<'active' | 'archived' | 'all'>('active');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // Selected Employee Detail state
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+
+  // Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
+
+  const fetchEmployees = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const res = await getEmployeesApi({
+        search,
+        status: statusFilter,
+        page,
+        pageSize,
+      });
+      setEmployees(res.items);
+      setTotal(res.total);
+      setTotalPages(res.totalPages);
+    } catch (err) {
+      console.error('Failed to fetch employees:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [search, statusFilter, page, pageSize]);
+
+  useEffect(() => {
+    let isMounted = true;
+    getEmployeesApi({
+      search,
+      status: statusFilter,
+      page,
+      pageSize,
+    })
+      .then((res) => {
+        if (!isMounted) return;
+        setEmployees(res.items);
+        setTotal(res.total);
+        setTotalPages(res.totalPages);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        if (!isMounted) return;
+        console.error('Failed to fetch employees:', err);
+        setIsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [search, statusFilter, page, pageSize]);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -51,10 +119,36 @@ export const AppShell: React.FC = () => {
       })
     : '';
 
+  // Modal Handlers
+  const handleOpenCreateModal = () => {
+    setEmployeeToEdit(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEditModal = (emp: Employee) => {
+    setEmployeeToEdit(emp);
+    setIsModalOpen(true);
+  };
+
+  const handleModalSuccess = (savedEmployee: Employee) => {
+    // Story 13: Newly created employees opened directly
+    setSelectedEmployee(savedEmployee);
+    void fetchEmployees();
+  };
+
+  const handleRefreshSelectedEmployee = async (id: number) => {
+    try {
+      const refreshed = await getEmployeeByIdApi(id);
+      setSelectedEmployee(refreshed);
+    } catch (err) {
+      console.error('Failed to refresh employee details:', err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
       {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-900/80 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-slate-800 bg-slate-900/80 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600/20 text-indigo-400 border border-indigo-500/30">
@@ -64,8 +158,8 @@ export const AppShell: React.FC = () => {
               <span className="font-bold tracking-tight text-white text-base">
                 Employee Salary Management
               </span>
-              <span className="ml-2.5 rounded bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-400 border border-emerald-500/20">
-                Ticket 01 • Sign-in Ready
+              <span className="ml-2.5 rounded bg-indigo-500/10 px-2 py-0.5 text-xs font-medium text-indigo-400 border border-indigo-500/20">
+                Ticket 02 • Onboarding Active
               </span>
             </div>
           </div>
@@ -120,131 +214,55 @@ export const AppShell: React.FC = () => {
 
       {/* Main Content Area */}
       <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {/* Active Security Safeguards */}
-          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 shadow-sm">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                <ShieldCheck className="h-5 w-5" />
-              </div>
-              <div>
-                <h2 className="text-base font-semibold text-white">Security Safeguards</h2>
-                <p className="text-xs text-slate-400">OWASP compliance active</p>
-              </div>
-            </div>
-            <ul className="space-y-2.5 text-sm text-slate-300">
-              <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                <span>32-byte CSPRNG verifier in HttpOnly cookie</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                <span>SHA-256 verifier hash stored in database</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                <span>Fixed 8-hour expiry (no sliding extension)</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                <span>Strict CSRF header & origin verification</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                <span>Immediate database-backed logout revocation</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Database Target Status */}
-          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 shadow-sm">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                <Database className="h-5 w-5" />
-              </div>
-              <div>
-                <h2 className="text-base font-semibold text-white">Neon PostgreSQL</h2>
-                <p className="text-xs text-slate-400">Singapore (aws-ap-southeast-1)</p>
-              </div>
-            </div>
-            <div className="space-y-3 text-sm text-slate-300">
-              <div className="rounded-lg bg-slate-950/60 p-3 border border-slate-800/80 font-mono text-xs">
-                <div className="text-slate-400">Project:</div>
-                <div className="text-indigo-300 font-semibold truncate">employee-salary-management</div>
-                <div className="mt-2 text-slate-400">Active Branch:</div>
-                <div className="text-emerald-400 font-semibold">development (isolated)</div>
-                <div className="mt-2 text-slate-400">Prisma Client/Adapter:</div>
-                <div className="text-slate-200">7.10.1 (Pinned)</div>
-              </div>
-              <p className="text-xs text-slate-400">
-                Repeat-safe seed verified. Test suite executes independently against isolated Neon test branch.
-              </p>
-            </div>
-          </div>
-
-          {/* Next Slices Roadmap */}
-          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 shadow-sm md:col-span-2 lg:col-span-1">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                <Lock className="h-5 w-5" />
-              </div>
-              <div>
-                <h2 className="text-base font-semibold text-white">Upcoming Modules</h2>
-                <p className="text-xs text-slate-400">Ready for subsequent tickets</p>
-              </div>
-            </div>
-            <ol className="space-y-2 text-xs text-slate-300">
-              <li className="flex items-center justify-between p-2 rounded bg-slate-800/40 border border-slate-800">
-                <span className="font-medium text-slate-200">02. Employee Onboarding</span>
-                <span className="text-slate-500">Next</span>
-              </li>
-              <li className="flex items-center justify-between p-2 rounded bg-slate-800/20 text-slate-400">
-                <span>03. Basic Salary & History</span>
-                <span className="text-slate-600">Pending</span>
-              </li>
-              <li className="flex items-center justify-between p-2 rounded bg-slate-800/20 text-slate-400">
-                <span>04. Component Catalog</span>
-                <span className="text-slate-600">Pending</span>
-              </li>
-              <li className="flex items-center justify-between p-2 rounded bg-slate-800/20 text-slate-400">
-                <span>05. Employee Components & Rates</span>
-                <span className="text-slate-600">Pending</span>
-              </li>
-            </ol>
-          </div>
-        </div>
-
-        {/* Milestone Card */}
-        <div className="mt-8 rounded-xl border border-emerald-500/20 bg-emerald-950/10 p-6">
-          <div className="flex items-start gap-4">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">
-              <CheckCircle2 className="h-6 w-6" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-base font-semibold text-emerald-300">
-                Vertical Slice 01 Complete: Standalone Sign-In
-              </h3>
-              <p className="mt-1 text-sm text-slate-300 leading-relaxed">
-                The standalone React/NestJS architecture is established with Prisma 7.10.1 and connected to the dedicated Singapore Neon database. The administrator account signs in securely, survives browser page refresh, rejects cross-origin tampering, and revokes immediately upon logout.
-              </p>
-              <div className="mt-4 flex flex-wrap gap-2 text-xs font-mono text-emerald-400">
-                <span className="rounded bg-emerald-500/10 px-2.5 py-1 border border-emerald-500/20">
-                  Prisma 7.10.1
-                </span>
-                <span className="rounded bg-emerald-500/10 px-2.5 py-1 border border-emerald-500/20">
-                  NestJS 12 + Express
-                </span>
-                <span className="rounded bg-emerald-500/10 px-2.5 py-1 border border-emerald-500/20">
-                  Vite Proxy /api
-                </span>
-                <span className="rounded bg-emerald-500/10 px-2.5 py-1 border border-emerald-500/20">
-                  HttpOnly Sessions
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+        {selectedEmployee ? (
+          <EmployeeDetail
+            employee={selectedEmployee}
+            onBack={() => {
+              setSelectedEmployee(null);
+              void fetchEmployees();
+            }}
+            onEdit={handleOpenEditModal}
+          />
+        ) : (
+          <EmployeeDirectory
+            employees={employees}
+            total={total}
+            page={page}
+            pageSize={pageSize}
+            totalPages={totalPages}
+            isLoading={isLoading}
+            search={search}
+            onSearchChange={(newSearch) => {
+              setSearch(newSearch);
+              setPage(1);
+            }}
+            statusFilter={statusFilter}
+            onStatusFilterChange={(newStatus) => {
+              setStatusFilter(newStatus);
+              setPage(1);
+            }}
+            onPageChange={(newPage) => setPage(newPage)}
+            onOpenCreateModal={handleOpenCreateModal}
+            onSelectEmployee={(emp) => setSelectedEmployee(emp)}
+            onEditEmployee={handleOpenEditModal}
+          />
+        )}
       </main>
+
+      {/* Contextual Create/Edit Modal */}
+      <EmployeeModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmitCreate={createEmployeeApi}
+        onSubmitEdit={updateEmployeeApi}
+        employeeToEdit={employeeToEdit}
+        onSuccess={(saved) => {
+          handleModalSuccess(saved);
+          if (selectedEmployee && selectedEmployee.id === saved.id) {
+            void handleRefreshSelectedEmployee(saved.id);
+          }
+        }}
+      />
     </div>
   );
 };

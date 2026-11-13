@@ -27,3 +27,8 @@ export type AdminUser = Prisma.AdminUserModel
  * 
  */
 export type AuthSession = Prisma.AuthSessionModel
+/**
+ * Model Employee
+ * 
+ */
+export type Employee = Prisma.EmployeeModel
