@@ -30,3 +30,24 @@ export interface ListSalaryComponentsQuery {
   page?: number;
   pageSize?: number;
 }
+
+export interface ComponentArchiveImpact {
+  id: number;
+  name: string;
+  version: number;
+  isActive: boolean;
+  affectedEmployeeCount: number;
+}
+
+export interface ArchiveSalaryComponentPayload {
+  expectedVersion: number;
+  expectedAffectedCount: number;
+}
+
+export interface ArchiveSalaryComponentResponse {
+  id: number;
+  name: string;
+  isActive: boolean;
+  version: number;
+  deactivatedAssignmentsCount: number;
+}

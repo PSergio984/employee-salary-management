@@ -17,6 +17,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     let code = 'INTERNAL_ERROR';
     let message = 'An unexpected error occurred';
     let fieldErrors: Record<string, string[]> | undefined;
+    let extraMeta: Record<string, unknown> = {};
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
@@ -31,8 +32,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
           const innerError = obj.error as Record<string, unknown>;
           code = (innerError.code as string) || this.statusCodeToErrorCode(status);
           message = (innerError.message as string) || exception.message;
-          if (innerError.fieldErrors) {
-            fieldErrors = innerError.fieldErrors as Record<string, string[]>;
+          const { code: _c, message: _m, fieldErrors: fe, ...rest } = innerError;
+          extraMeta = rest;
+          if (fe) {
+            fieldErrors = fe as Record<string, string[]>;
           }
         } else {
           code = (obj.error as string) || this.statusCodeToErrorCode(status);
@@ -62,6 +65,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         code,
         message,
         ...(fieldErrors ? { fieldErrors } : {}),
+        ...extraMeta,
       },
     });
   }

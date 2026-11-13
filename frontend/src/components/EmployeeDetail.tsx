@@ -1202,7 +1202,24 @@ export const EmployeeDetail: React.FC<EmployeeDetailProps> = ({
                     {componentHistoryItems.map((record) => (
                       <tr key={record.id} className="hover:bg-slate-800/30 transition">
                         <td className="px-6 py-4 font-mono text-xs text-slate-400">#{record.id}</td>
-                        <td className="px-6 py-4 font-medium text-white">{record.name}</td>
+                        <td className="px-6 py-4 font-medium text-white">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span>{record.name}</span>
+                            <span className="font-mono text-[11px] text-slate-400">
+                              (CID #{record.componentId})
+                            </span>
+                            {record.componentIsActive === false && (
+                              <span className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                                Archived Def
+                              </span>
+                            )}
+                            {record.componentIsActive === true && (
+                              <span className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium bg-slate-800 text-slate-400 border border-slate-700/50">
+                                Active Def
+                              </span>
+                            )}
+                          </div>
+                        </td>
                         <td className="px-6 py-4 font-bold text-emerald-400">{formatPeso(record.amount)}</td>
                         <td className="px-6 py-4">
                           <span

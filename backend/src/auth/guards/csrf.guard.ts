@@ -35,8 +35,11 @@ export class CsrfGuard implements CanActivate {
     }
 
     // 2. Check Origin / Referer against configured allowed origin
-    const allowedOrigin =
-      this.configService.get<string>('CLIENT_ORIGIN') || 'http://localhost:5173';
+    const allowedOrigins = (
+      this.configService.get<string>('CLIENT_ORIGIN') || 'http://localhost:5173'
+    )
+      .split(',')
+      .map((s) => s.trim());
 
     let requestOrigin = request.headers['origin'];
     if (!requestOrigin) {
@@ -50,7 +53,7 @@ export class CsrfGuard implements CanActivate {
       }
     }
 
-    if (!requestOrigin || requestOrigin === 'null' || requestOrigin !== allowedOrigin) {
+    if (!requestOrigin || requestOrigin === 'null' || !allowedOrigins.includes(requestOrigin)) {
       throw new ForbiddenException({
         error: {
           code: 'CSRF_REJECTED',

@@ -34,6 +34,7 @@ export interface EmployeeComponentRecord {
   isActive: boolean;
   recordedAt: string;
   endedAt: string | null;
+  componentIsActive?: boolean;
 }
 
 export interface SalarySummaryComponentItem {

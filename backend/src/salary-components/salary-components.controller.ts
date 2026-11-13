@@ -13,6 +13,7 @@ import {
 import { CreateSalaryComponentDto } from './dto/create-salary-component.dto.js';
 import { ListSalaryComponentsDto } from './dto/list-salary-components.dto.js';
 import { UpdateSalaryComponentDto } from './dto/update-salary-component.dto.js';
+import { ArchiveSalaryComponentDto } from './dto/archive-salary-component.dto.js';
 import { SalaryComponentsService } from './salary-components.service.js';
 
 @Controller('salary-components')
@@ -24,6 +25,20 @@ export class SalaryComponentsController {
   @Get()
   async list(@Query() query: ListSalaryComponentsDto) {
     return this.salaryComponentsService.list(query);
+  }
+
+  @Get(':id/archive-impact')
+  async getArchiveImpact(@Param('id', ParseIntPipe) id: number) {
+    return this.salaryComponentsService.getArchiveImpact(id);
+  }
+
+  @Post(':id/archive')
+  @HttpCode(HttpStatus.OK)
+  async archive(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: ArchiveSalaryComponentDto,
+  ) {
+    return this.salaryComponentsService.archive(id, dto);
   }
 
   @Get(':id')

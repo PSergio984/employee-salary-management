@@ -9,12 +9,29 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateSalaryComponentDto } from './dto/create-salary-component.dto.js';
 import { ListSalaryComponentsDto } from './dto/list-salary-components.dto.js';
 import { UpdateSalaryComponentDto } from './dto/update-salary-component.dto.js';
+import { ArchiveSalaryComponentDto } from './dto/archive-salary-component.dto.js';
 
 export interface PaginatedResult<T> {
   items: T[];
   page: number;
   pageSize: number;
   total: number;
+}
+
+export interface ComponentArchiveImpactResponse {
+  id: number;
+  name: string;
+  version: number;
+  isActive: boolean;
+  affectedEmployeeCount: number;
+}
+
+export interface ArchiveSalaryComponentResponse {
+  id: number;
+  name: string;
+  isActive: boolean;
+  version: number;
+  deactivatedAssignmentsCount: number;
 }
 
 @Injectable()
@@ -173,6 +190,15 @@ export class SalaryComponentsService {
       });
     }
 
+    if (!component.isActive) {
+      throw new ConflictException({
+        error: {
+          code: 'COMPONENT_ARCHIVED',
+          message: 'Cannot rename or modify an archived salary component definition',
+        },
+      });
+    }
+
     // Optimistic concurrency check
     if (component.version !== dto.expectedVersion) {
       throw new ConflictException({
@@ -246,6 +272,157 @@ export class SalaryComponentsService {
       this.handleDatabaseConstraintError(err, name);
       throw err;
     }
+  }
+
+  /**
+   * Retrieves preview of archive impact: names definition, current version, and affected employee count.
+   * If definition is already archived, rejects with 409 Conflict.
+   */
+  async getArchiveImpact(id: number): Promise<ComponentArchiveImpactResponse> {
+    const component = await this.prisma.salaryComponent.findUnique({
+      where: { id },
+    });
+
+    if (!component) {
+      throw new NotFoundException({
+        error: {
+          code: 'NOT_FOUND',
+          message: `Salary component with ID ${id} not found`,
+        },
+      });
+    }
+
+    if (!component.isActive) {
+      throw new ConflictException({
+        error: {
+          code: 'COMPONENT_ALREADY_ARCHIVED',
+          message: `Salary component "${component.name}" is already archived`,
+        },
+      });
+    }
+
+    // Backend-derived affected employee count: counts all active assignments including archived employees
+    const affectedEmployeeCount = await this.prisma.employeeSalaryComponent.count({
+      where: {
+        componentId: id,
+        isActive: true,
+      },
+    });
+
+    return {
+      id: component.id,
+      name: component.name,
+      version: component.version,
+      isActive: component.isActive,
+      affectedEmployeeCount,
+    };
+  }
+
+  /**
+   * Archives a shared salary component definition atomically.
+   * Coordinates definition-first row lock.
+   * Rechecks version and recomputes active assignment count.
+   * If expected version or affected count is stale, aborts with 409 Conflict without making mutations.
+   * Deactivates ONLY currently active assignments (including for archived employees), preserving amounts and historical rows.
+   */
+  async archive(
+    id: number,
+    dto: ArchiveSalaryComponentDto,
+  ): Promise<ArchiveSalaryComponentResponse> {
+    return this.prisma.$transaction(async (tx) => {
+      // 1. Definition-first lock protocol
+      const lockedComponents = await tx.$queryRaw<
+        Array<{ id: number; name: string; is_active: boolean; version: number }>
+      >`
+        SELECT id, name, is_active, version
+        FROM salary_components
+        WHERE id = ${id}
+        FOR UPDATE;
+      `;
+
+      if (!lockedComponents || lockedComponents.length === 0) {
+        throw new NotFoundException({
+          error: {
+            code: 'NOT_FOUND',
+            message: `Salary component with ID ${id} not found`,
+          },
+        });
+      }
+
+      const lockedComp = lockedComponents[0];
+
+      if (!lockedComp.is_active) {
+        throw new ConflictException({
+          error: {
+            code: 'COMPONENT_ALREADY_ARCHIVED',
+            message: `Salary component "${lockedComp.name}" is already archived`,
+          },
+        });
+      }
+
+      // 2. Recompute active assignments count within locked transaction
+      const currentActiveCount = await tx.employeeSalaryComponent.count({
+        where: {
+          componentId: id,
+          isActive: true,
+        },
+      });
+
+      // 3. Stale preview checks: version or affected count mismatch rejects with 409
+      if (lockedComp.version !== dto.expectedVersion) {
+        throw new ConflictException({
+          error: {
+            code: 'STALE_ARCHIVE_PREVIEW',
+            message: `Component version changed: expected version ${dto.expectedVersion}, but current version is ${lockedComp.version}. Please review fresh impact.`,
+            currentVersion: lockedComp.version,
+            currentAffectedCount: currentActiveCount,
+          },
+        });
+      }
+
+      if (currentActiveCount !== dto.expectedAffectedCount) {
+        throw new ConflictException({
+          error: {
+            code: 'STALE_ARCHIVE_PREVIEW',
+            message: `Affected employee count changed: expected ${dto.expectedAffectedCount}, but currently ${currentActiveCount} employees are affected. Please review fresh impact.`,
+            currentVersion: lockedComp.version,
+            currentAffectedCount: currentActiveCount,
+          },
+        });
+      }
+
+      // 4. Atomic deactivation
+      const now = new Date();
+
+      // Deactivate ONLY currently active assignments (including archived employees)
+      const deactivationResult = await tx.employeeSalaryComponent.updateMany({
+        where: {
+          componentId: id,
+          isActive: true,
+        },
+        data: {
+          isActive: false,
+          endedAt: now,
+        },
+      });
+
+      // Archive definition and bump version
+      const updatedComponent = await tx.salaryComponent.update({
+        where: { id },
+        data: {
+          isActive: false,
+          version: { increment: 1 },
+        },
+      });
+
+      return {
+        id: updatedComponent.id,
+        name: updatedComponent.name,
+        isActive: updatedComponent.isActive,
+        version: updatedComponent.version,
+        deactivatedAssignmentsCount: deactivationResult.count,
+      };
+    });
   }
 
   /**

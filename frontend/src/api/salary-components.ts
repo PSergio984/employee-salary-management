@@ -5,6 +5,9 @@ import {
   CreateSalaryComponentInput,
   UpdateSalaryComponentInput,
   ListSalaryComponentsQuery,
+  ComponentArchiveImpact,
+  ArchiveSalaryComponentPayload,
+  ArchiveSalaryComponentResponse,
 } from '../types/salary-component.js';
 
 export async function fetchSalaryComponents(
@@ -52,4 +55,26 @@ export async function updateSalaryComponent(
     method: 'PATCH',
     body: JSON.stringify(data),
   });
+}
+
+export async function fetchComponentArchiveImpact(
+  id: number,
+): Promise<ComponentArchiveImpact> {
+  return apiClient<ComponentArchiveImpact>(
+    `/api/salary-components/${id}/archive-impact`,
+    { method: 'GET' },
+  );
+}
+
+export async function archiveSalaryComponent(
+  id: number,
+  data: ArchiveSalaryComponentPayload,
+): Promise<ArchiveSalaryComponentResponse> {
+  return apiClient<ArchiveSalaryComponentResponse>(
+    `/api/salary-components/${id}/archive`,
+    {
+      method: 'POST',
+      body: JSON.stringify(data),
+    },
+  );
 }

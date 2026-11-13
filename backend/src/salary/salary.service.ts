@@ -30,6 +30,7 @@ export interface EmployeeComponentResponse {
   isActive: boolean;
   recordedAt: string;
   endedAt: string | null;
+  componentIsActive?: boolean;
 }
 
 export interface BasicSalarySummaryResponse {
@@ -303,7 +304,11 @@ export class SalaryService {
     }
 
     const assignments = await this.prisma.employeeSalaryComponent.findMany({
-      where: { employeeId, isActive: true },
+      where: {
+        employeeId,
+        isActive: true,
+        component: { isActive: true },
+      },
       include: { component: true },
       orderBy: [{ recordedAt: 'asc' }, { id: 'asc' }],
     });
@@ -318,6 +323,7 @@ export class SalaryService {
         isActive: a.isActive,
         recordedAt: a.recordedAt.toISOString(),
         endedAt: a.endedAt ? a.endedAt.toISOString() : null,
+        componentIsActive: a.component.isActive,
       })),
       total: assignments.length,
     };
@@ -348,7 +354,12 @@ export class SalaryService {
       }
       const lockedComp = lockedComponents[0];
       if (!lockedComp.is_active) {
-        throw new BadRequestException('Cannot assign an archived salary component definition');
+        throw new BadRequestException({
+          error: {
+            code: 'COMPONENT_ARCHIVED',
+            message: 'Cannot assign an archived salary component definition',
+          },
+        });
       }
 
       // 2. Employee lock
@@ -462,7 +473,12 @@ export class SalaryService {
       }
       const lockedComp = lockedComponents[0];
       if (!lockedComp.is_active) {
-        throw new BadRequestException('Cannot modify assignment of an archived salary component definition');
+        throw new BadRequestException({
+          error: {
+            code: 'COMPONENT_ARCHIVED',
+            message: 'Cannot modify assignment of an archived salary component definition',
+          },
+        });
       }
 
       // 2. Employee lock
@@ -685,6 +701,7 @@ export class SalaryService {
         isActive: r.isActive,
         recordedAt: r.recordedAt.toISOString(),
         endedAt: r.endedAt ? r.endedAt.toISOString() : null,
+        componentIsActive: r.component.isActive,
       })),
       total: records.length,
     };

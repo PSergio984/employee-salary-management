@@ -24,9 +24,10 @@ async function bootstrap(): Promise<void> {
     }),
   );
 
-  const clientOrigin = config.get<string>('CLIENT_ORIGIN') || 'http://localhost:5173';
+  const rawClientOrigin = config.get<string>('CLIENT_ORIGIN') || 'http://localhost:5173';
+  const origins = rawClientOrigin.split(',').map((s) => s.trim());
   app.enableCors({
-    origin: clientOrigin,
+    origin: origins.length === 1 ? origins[0] : origins,
     credentials: true,
   });
 
@@ -39,7 +40,7 @@ async function bootstrap(): Promise<void> {
   }
 
   await app.listen(port);
-  console.log(`Backend server running on port ${port} with client origin ${clientOrigin}`);
+  console.log(`Backend server running on port ${port} with client origin ${rawClientOrigin}`);
 }
 
 void bootstrap();
