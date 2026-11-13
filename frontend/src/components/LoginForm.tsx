@@ -11,6 +11,7 @@ export const LoginForm: React.FC = () => {
     isSubmitting,
     errorMessage,
     sessionError,
+    sessionErrorType,
     retryRestoreSession,
     handleSubmit,
   } = useLoginViewModel();
@@ -40,14 +41,16 @@ export const LoginForm: React.FC = () => {
               <AlertCircle className="h-5 w-5 shrink-0 text-amber-400" />
               <div className="flex-1 font-medium">{sessionError}</div>
             </div>
-            <button
-              type="button"
-              onClick={retryRestoreSession}
-              className="mt-1 flex items-center justify-center gap-1.5 self-end rounded border border-amber-500/40 bg-amber-900/40 px-3 py-1 text-xs font-semibold text-amber-100 hover:bg-amber-800/60"
-            >
-              <RefreshCw className="h-3.5 w-3.5" />
-              <span>Retry Session Check</span>
-            </button>
+            {sessionErrorType === 'network' && (
+              <button
+                type="button"
+                onClick={retryRestoreSession}
+                className="mt-1 flex items-center justify-center gap-1.5 self-end rounded border border-amber-500/40 bg-amber-900/40 px-3 py-1 text-xs font-semibold text-amber-100 hover:bg-amber-800/60"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                <span>Retry Connection</span>
+              </button>
+            )}
           </div>
         )}
 
@@ -129,10 +132,6 @@ export const LoginForm: React.FC = () => {
             )}
           </button>
         </form>
-
-        <div className="mt-8 border-t border-slate-800 pt-4 text-center text-xs text-slate-500">
-          Protected session • Fixed 8-hour expiry • Server invalidation
-        </div>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ export interface AuthContextType {
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   sessionError: string | null;
+  sessionErrorType: 'expired' | 'network' | null;
   retryRestoreSession: () => void;
 }
 

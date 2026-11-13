@@ -56,8 +56,12 @@ export async function apiClient<T>(
     return undefined as unknown as T;
   }
 
-  // Auto-invalidate session on protected 401s (not login)
-  if (response.status === 401 && !endpoint.includes('/api/auth/login')) {
+  // Auto-invalidate session on protected 401s (not login or initial auth check)
+  if (
+    response.status === 401 &&
+    !endpoint.includes('/api/auth/login') &&
+    !endpoint.includes('/api/auth/me')
+  ) {
     if (onUnauthorizedListener) {
       onUnauthorizedListener();
     }

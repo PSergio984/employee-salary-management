@@ -3,7 +3,7 @@ import { useAuth } from '../context/useAuth.js';
 import { ApiError } from '../api/client.js';
 
 export function useLoginViewModel() {
-  const { login, sessionError, retryRestoreSession } = useAuth();
+  const { login, sessionError, sessionErrorType, retryRestoreSession } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,6 +51,7 @@ export function useLoginViewModel() {
     isSubmitting,
     errorMessage,
     sessionError,
+    sessionErrorType,
     retryRestoreSession,
     handleSubmit,
   };
