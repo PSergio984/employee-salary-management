@@ -1,0 +1,538 @@
+<mxfile host="Electron" modified="2026-11-13T14:05:00.000Z" version="26.0.0">
+  <diagram id="employee-salary-erd" name="Employee Salary Management ERD">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1550" pageHeight="900" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Employee Salary Management — Relational Database ERD" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;fontColor=#111111;" vertex="1" parent="1">
+          <mxGeometry x="375" y="25" width="800" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="PostgreSQL Relational Schema • Explicit Foreign Key Mappings" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=13;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="375" y="65" width="800" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_admin_users" value="admin_users" style="shape=table;startSize=36;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=1;fontStyle=1;align=center;resizeLast=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;fontColor=#111111;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry x="60" y="140" width="400" height="148" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_admin_users_r0" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_admin_users">
+          <mxGeometry y="36" width="400" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_admin_users_r0_c1" value="PK" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_admin_users_r0">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_admin_users_r0_c2" value="id : INTEGER" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_admin_users_r0">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_admin_users_r0_c3" value="SERIAL, PRIMARY KEY" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_admin_users_r0">
+          <mxGeometry x="220" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_admin_users_r1" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_admin_users">
+          <mxGeometry y="64" width="400" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_admin_users_r1_c1" value="UK" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_admin_users_r1">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_admin_users_r1_c2" value="username : TEXT" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_admin_users_r1">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_admin_users_r1_c3" value="UNIQUE" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_admin_users_r1">
+          <mxGeometry x="220" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_admin_users_r2" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_admin_users">
+          <mxGeometry y="92" width="400" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_admin_users_r2_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_admin_users_r2">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_admin_users_r2_c2" value="password_hash : TEXT" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_admin_users_r2">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_admin_users_r2_c3" value="NOT NULL (bcrypt)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_admin_users_r2">
+          <mxGeometry x="220" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_admin_users_r3" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_admin_users">
+          <mxGeometry y="120" width="400" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_admin_users_r3_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_admin_users_r3">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_admin_users_r3_c2" value="created_at : TIMESTAMPTZ(3)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_admin_users_r3">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_admin_users_r3_c3" value="DEFAULT now()" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_admin_users_r3">
+          <mxGeometry x="220" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions" value="auth_sessions" style="shape=table;startSize=36;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=1;fontStyle=1;align=center;resizeLast=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;fontColor=#111111;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry x="60" y="380" width="400" height="204" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r0" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_auth_sessions">
+          <mxGeometry y="36" width="400" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r0_c1" value="PK" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r0">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r0_c2" value="id : TEXT" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r0">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r0_c3" value="UUID, PRIMARY KEY" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r0">
+          <mxGeometry x="220" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r1" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_auth_sessions">
+          <mxGeometry y="64" width="400" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r1_c1" value="FK" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r1">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r1_c2" value="admin_user_id : INTEGER" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r1">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r1_c3" value="FK -&gt; admin_users.id (CASCADE)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r1">
+          <mxGeometry x="220" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r2" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_auth_sessions">
+          <mxGeometry y="92" width="400" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r2_c1" value="UK" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r2">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r2_c2" value="token_hash : TEXT" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r2">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r2_c3" value="UNIQUE (SHA-256 verifier)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r2">
+          <mxGeometry x="220" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r3" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_auth_sessions">
+          <mxGeometry y="120" width="400" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r3_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r3">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r3_c2" value="created_at : TIMESTAMPTZ(3)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r3">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r3_c3" value="DEFAULT now()" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r3">
+          <mxGeometry x="220" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r4" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_auth_sessions">
+          <mxGeometry y="148" width="400" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r4_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r4">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r4_c2" value="expires_at : TIMESTAMPTZ(3)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r4">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r4_c3" value="NOT NULL (8 hours)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r4">
+          <mxGeometry x="220" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r5" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_auth_sessions">
+          <mxGeometry y="176" width="400" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r5_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r5">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r5_c2" value="revoked_at : TIMESTAMPTZ(3)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r5">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_auth_sessions_r5_c3" value="NULLABLE (on logout)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_auth_sessions_r5">
+          <mxGeometry x="220" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees" value="employees" style="shape=table;startSize=36;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=1;fontStyle=1;align=center;resizeLast=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontColor=#111111;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry x="530" y="140" width="440" height="344" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employees_r0" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employees">
+          <mxGeometry y="36" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employees_r0_c1" value="PK" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r0">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r0_c2" value="id : INTEGER" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r0">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r0_c3" value="SERIAL, PRIMARY KEY (Internal FK)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r0">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r1" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employees">
+          <mxGeometry y="64" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employees_r1_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r1">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r1_c2" value="employee_id : TEXT" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r1">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r1_c3" value="NOT NULL (Business ID)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r1">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r2" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employees">
+          <mxGeometry y="92" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employees_r2_c1" value="UK" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r2">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r2_c2" value="employee_id_key : TEXT" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r2">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r2_c3" value="UNIQUE (Normalized key)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r2">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r3" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employees">
+          <mxGeometry y="120" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employees_r3_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r3">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r3_c2" value="first_name : TEXT" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r3">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r3_c3" value="NOT NULL" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r3">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r4" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employees">
+          <mxGeometry y="148" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employees_r4_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r4">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r4_c2" value="middle_name : TEXT" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r4">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r4_c3" value="NULLABLE" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r4">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r5" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employees">
+          <mxGeometry y="176" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employees_r5_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r5">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r5_c2" value="last_name : TEXT" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r5">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r5_c3" value="NOT NULL" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r5">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r6" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employees">
+          <mxGeometry y="204" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employees_r6_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r6">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r6_c2" value="date_hired : DATE" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r6">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r6_c3" value="NOT NULL (Date-only Asia/Manila)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r6">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r7" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employees">
+          <mxGeometry y="232" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employees_r7_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r7">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r7_c2" value="is_active : BOOLEAN" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r7">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r7_c3" value="DEFAULT true (false = archived)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r7">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r8" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employees">
+          <mxGeometry y="260" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employees_r8_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r8">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r8_c2" value="version : INTEGER" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r8">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r8_c3" value="DEFAULT 1 (Optimistic lock)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r8">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r9" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employees">
+          <mxGeometry y="288" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employees_r9_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r9">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r9_c2" value="created_at : TIMESTAMPTZ(3)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r9">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r9_c3" value="DEFAULT now()" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r9">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r10" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employees">
+          <mxGeometry y="316" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employees_r10_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r10">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r10_c2" value="updated_at : TIMESTAMPTZ(3)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r10">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employees_r10_c3" value="NOT NULL" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employees_r10">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments" value="basic_salary_assignments" style="shape=table;startSize=36;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=1;fontStyle=1;align=center;resizeLast=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontColor=#111111;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry x="530" y="580" width="440" height="204" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r0" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_basic_salary_assignments">
+          <mxGeometry y="36" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r0_c1" value="PK" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r0">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r0_c2" value="id : INTEGER" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r0">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r0_c3" value="SERIAL, PRIMARY KEY" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r0">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r1" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_basic_salary_assignments">
+          <mxGeometry y="64" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r1_c1" value="FK" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r1">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r1_c2" value="employee_id : INTEGER" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r1">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r1_c3" value="FK -&gt; employees.id (RESTRICT)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r1">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r2" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_basic_salary_assignments">
+          <mxGeometry y="92" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r2_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r2">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r2_c2" value="amount : DECIMAL(14,2)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r2">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r2_c3" value="NOT NULL (PHP 0..999B)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r2">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r3" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_basic_salary_assignments">
+          <mxGeometry y="120" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r3_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r3">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r3_c2" value="is_active : BOOLEAN" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r3">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r3_c3" value="DEFAULT true (Partial UK: 1 active)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r3">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r4" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_basic_salary_assignments">
+          <mxGeometry y="148" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r4_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r4">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r4_c2" value="recorded_at : TIMESTAMPTZ(3)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r4">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r4_c3" value="DEFAULT now()" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r4">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r5" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_basic_salary_assignments">
+          <mxGeometry y="176" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r5_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r5">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r5_c2" value="ended_at : TIMESTAMPTZ(3)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r5">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_basic_salary_assignments_r5_c3" value="NULLABLE (Superseded time)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_basic_salary_assignments_r5">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components" value="salary_components" style="shape=table;startSize=36;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=1;fontStyle=1;align=center;resizeLast=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontColor=#111111;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="140" width="440" height="232" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_salary_components_r0" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_salary_components">
+          <mxGeometry y="36" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_salary_components_r0_c1" value="PK" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r0">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r0_c2" value="id : INTEGER" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r0">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r0_c3" value="SERIAL, PRIMARY KEY" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r0">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r1" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_salary_components">
+          <mxGeometry y="64" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_salary_components_r1_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r1">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r1_c2" value="name : TEXT" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r1">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r1_c3" value="NOT NULL (Display name)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r1">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r2" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_salary_components">
+          <mxGeometry y="92" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_salary_components_r2_c1" value="UK*" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r2">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r2_c2" value="name_key : TEXT" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r2">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r2_c3" value="UNIQUE WHERE is_active = true" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r2">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r3" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_salary_components">
+          <mxGeometry y="120" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_salary_components_r3_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r3">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r3_c2" value="is_active : BOOLEAN" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r3">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r3_c3" value="DEFAULT true (false = archived)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r3">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r4" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_salary_components">
+          <mxGeometry y="148" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_salary_components_r4_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r4">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r4_c2" value="version : INTEGER" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r4">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r4_c3" value="DEFAULT 1 (Optimistic lock)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r4">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r5" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_salary_components">
+          <mxGeometry y="176" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_salary_components_r5_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r5">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r5_c2" value="created_at : TIMESTAMPTZ(3)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r5">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r5_c3" value="DEFAULT now()" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r5">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r6" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_salary_components">
+          <mxGeometry y="204" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_salary_components_r6_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r6">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r6_c2" value="updated_at : TIMESTAMPTZ(3)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r6">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_salary_components_r6_c3" value="NOT NULL" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_salary_components_r6">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components" value="employee_salary_components" style="shape=table;startSize=36;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=1;fontStyle=1;align=center;resizeLast=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontColor=#111111;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="550" width="440" height="232" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r0" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employee_salary_components">
+          <mxGeometry y="36" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r0_c1" value="PK" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r0">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r0_c2" value="id : INTEGER" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r0">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r0_c3" value="SERIAL, PRIMARY KEY" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r0">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r1" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employee_salary_components">
+          <mxGeometry y="64" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r1_c1" value="FK" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r1">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r1_c2" value="employee_id : INTEGER" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r1">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r1_c3" value="FK -&gt; employees.id (RESTRICT)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r1">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r2" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employee_salary_components">
+          <mxGeometry y="92" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r2_c1" value="FK" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r2">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r2_c2" value="component_id : INTEGER" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r2">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r2_c3" value="FK -&gt; salary_components.id (RESTRICT)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r2">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r3" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employee_salary_components">
+          <mxGeometry y="120" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r3_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r3">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r3_c2" value="amount : DECIMAL(14,2)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r3">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r3_c3" value="NOT NULL (PHP 0..999B)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r3">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r4" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employee_salary_components">
+          <mxGeometry y="148" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r4_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r4">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r4_c2" value="is_active : BOOLEAN" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r4">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r4_c3" value="DEFAULT true (Partial UK: 1 active pair)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r4">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r5" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employee_salary_components">
+          <mxGeometry y="176" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r5_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r5">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r5_c2" value="recorded_at : TIMESTAMPTZ(3)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r5">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r5_c3" value="DEFAULT now()" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r5">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r6" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#ffffff;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;strokeColor=#e0e0e0;" vertex="1" parent="tbl_employee_salary_components">
+          <mxGeometry y="204" width="440" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r6_c1" value="" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;fontStyle=1;align=center;overflow=hidden;fontSize=11;fontColor=#333333;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r6">
+          <mxGeometry width="40" height="28" as="geometry"><mxRectangle width="40" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r6_c2" value="ended_at : TIMESTAMPTZ(3)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontSize=12;fontColor=#111111;spacingLeft=8;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r6">
+          <mxGeometry x="40" width="180" height="28" as="geometry"><mxRectangle width="180" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="tbl_employee_salary_components_r6_c3" value="NULLABLE (Deactivated time)" style="shape=partialRectangle;connectable=0;fillColor=#ffffff;top=0;left=0;bottom=0;right=0;align=left;overflow=hidden;fontStyle=2;fontSize=11;fontColor=#666666;spacingLeft=6;strokeColor=none;html=0;" vertex="1" parent="tbl_employee_salary_components_r6">
+          <mxGeometry x="220" width="220" height="28" as="geometry"><mxRectangle width="220" height="28" as="alternateBounds" /></mxGeometry>
+        </mxCell>
+        <mxCell id="edge_admin_sessions" value="has (1:N, cascade)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;startArrow=ERmandOne;endArrow=ERmany;strokeColor=#444444;strokeWidth=1.5;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;spacing=4;exitX=0.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="tbl_admin_users_r0" target="tbl_auth_sessions_r1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_emp_basic" value="retains history (1:N)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;startArrow=ERmandOne;endArrow=ERmany;strokeColor=#444444;strokeWidth=1.5;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;spacing=4;exitX=0.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="tbl_employees_r0" target="tbl_basic_salary_assignments_r1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_emp_components" value="assigned to (1:N)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;startArrow=ERmandOne;endArrow=ERmany;strokeColor=#444444;strokeWidth=1.5;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;spacing=4;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="tbl_employees_r0" target="tbl_employee_salary_components_r1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_comp_employee" value="defines (1:N)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;startArrow=ERmandOne;endArrow=ERmany;strokeColor=#444444;strokeWidth=1.5;fontSize=11;fontColor=#222222;labelBackgroundColor=#ffffff;spacing=4;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=1.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="tbl_salary_components_r0" target="tbl_employee_salary_components_r2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
