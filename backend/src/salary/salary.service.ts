@@ -92,6 +92,34 @@ export class SalaryService {
   }> {
     const canonicalAmount = this.canonicalizeAmount(dto.amount);
 
+    if (
+      dto.expectedVersion === undefined ||
+      dto.expectedVersion === null ||
+      !Number.isInteger(dto.expectedVersion) ||
+      dto.expectedVersion < 1
+    ) {
+      throw new BadRequestException({
+        error: {
+          code: 'INVALID_EXPECTED_VERSION',
+          message: 'expectedVersion is required and must be an integer >= 1',
+        },
+      });
+    }
+
+    if (
+      dto.expectedCurrentId === undefined ||
+      (dto.expectedCurrentId !== null &&
+        (!Number.isInteger(dto.expectedCurrentId) || dto.expectedCurrentId < 1))
+    ) {
+      throw new BadRequestException({
+        error: {
+          code: 'INVALID_EXPECTED_CURRENT_ID',
+          message:
+            'expectedCurrentId must be explicitly null (for first assignment) or an integer >= 1',
+        },
+      });
+    }
+
     return this.prisma.$transaction(async (tx) => {
       // 1. Fetch and lock employee row
       const employees = await tx.$queryRaw<
@@ -108,10 +136,7 @@ export class SalaryService {
           'Cannot assign or update salary for an archived employee',
         );
       }
-      if (
-        dto.expectedVersion !== undefined &&
-        emp.version !== dto.expectedVersion
-      ) {
+      if (emp.version !== dto.expectedVersion) {
         throw new ConflictException(
           `Employee version conflict: expected version ${dto.expectedVersion}, but found ${emp.version}`,
         );
@@ -137,19 +162,17 @@ export class SalaryService {
         currentAssignments.length > 0 ? currentAssignments[0] : null;
 
       // 3. Concurrency check on expectedCurrentId
-      if (dto.expectedCurrentId !== undefined) {
-        if (current === null) {
-          if (dto.expectedCurrentId !== null) {
-            throw new ConflictException(
-              `Expected current salary ID ${dto.expectedCurrentId}, but employee has no current salary assignment`,
-            );
-          }
-        } else {
-          if (dto.expectedCurrentId !== current.id) {
-            throw new ConflictException(
-              `Stale current salary ID: expected ${dto.expectedCurrentId}, but current is ${current.id}`,
-            );
-          }
+      if (current === null) {
+        if (dto.expectedCurrentId !== null) {
+          throw new ConflictException(
+            `Expected current salary ID ${dto.expectedCurrentId}, but employee has no current salary assignment`,
+          );
+        }
+      } else {
+        if (dto.expectedCurrentId !== current.id) {
+          throw new ConflictException(
+            `Stale current salary ID: expected ${dto.expectedCurrentId}, but current is ${current.id}`,
+          );
         }
       }
 

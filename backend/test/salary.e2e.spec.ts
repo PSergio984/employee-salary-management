@@ -157,6 +157,7 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .send({
           amount: '20000.00',
           expectedCurrentId: null,
+          expectedVersion: 1,
         });
 
       expect(res.status).toBe(200);
@@ -191,10 +192,12 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .send({
           amount: '25000.00',
           expectedCurrentId: currentSalaryId,
+          expectedVersion: 2,
         });
 
       expect(res.status).toBe(200);
       expect(res.body.current.amount).toBe('25000.00');
+      expect(res.body.employeeVersion).toBe(3);
       currentSalaryId = res.body.current.id;
 
       const summaryRes = await request(app.getHttpServer())
@@ -219,10 +222,12 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .send({
           amount: '30000',
           expectedCurrentId: currentSalaryId,
+          expectedVersion: 3,
         });
 
       expect(res.status).toBe(200);
       expect(res.body.current.amount).toBe('30000.00');
+      expect(res.body.employeeVersion).toBe(4);
       currentSalaryId = res.body.current.id;
 
       const summaryRes = await request(app.getHttpServer())
@@ -247,10 +252,12 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .send({
           amount: '3.14',
           expectedCurrentId: currentSalaryId,
+          expectedVersion: 4,
         });
 
       expect(res.status).toBe(200);
       expect(res.body.current.amount).toBe('3.14');
+      expect(res.body.employeeVersion).toBe(5);
       currentSalaryId = res.body.current.id;
 
       const summaryRes = await request(app.getHttpServer())
@@ -275,10 +282,12 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .send({
           amount: '62.8',
           expectedCurrentId: currentSalaryId,
+          expectedVersion: 5,
         });
 
       expect(res.status).toBe(200);
       expect(res.body.current.amount).toBe('62.80');
+      expect(res.body.employeeVersion).toBe(6);
       currentSalaryId = res.body.current.id;
 
       const summaryRes = await request(app.getHttpServer())
@@ -303,9 +312,11 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .send({
           amount: '101.40',
           expectedCurrentId: currentSalaryId,
+          expectedVersion: 6,
         });
 
       expect(res.status).toBe(200);
+      expect(res.body.employeeVersion).toBe(7);
       currentSalaryId = res.body.current.id;
 
       const summaryRes = await request(app.getHttpServer())
@@ -350,6 +361,7 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .send({
           amount: '0.00',
           expectedCurrentId: null,
+          expectedVersion: 1,
         });
 
       expect(res.status).toBe(200);
@@ -381,6 +393,7 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .send({
           amount: '0',
           expectedCurrentId: currentSalaryId,
+          expectedVersion: recordedEmpVersion,
         });
 
       expect(res.status).toBe(200);
@@ -416,7 +429,7 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .set('Cookie', authCookie)
         .set('Origin', testClientOrigin)
         .set('X-Salary-Client', 'web')
-        .send({ amount: '15000.00', expectedCurrentId: null });
+        .send({ amount: '15000.00', expectedCurrentId: null, expectedVersion: 1 });
       expect(r1.status).toBe(200);
 
       // 2nd assignment: 18,000.00
@@ -425,7 +438,7 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .set('Cookie', authCookie)
         .set('Origin', testClientOrigin)
         .set('X-Salary-Client', 'web')
-        .send({ amount: '18000.00', expectedCurrentId: r1.body.current.id });
+        .send({ amount: '18000.00', expectedCurrentId: r1.body.current.id, expectedVersion: 2 });
       expect(r2.status).toBe(200);
 
       // 3rd assignment: 22,500.00
@@ -434,7 +447,7 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .set('Cookie', authCookie)
         .set('Origin', testClientOrigin)
         .set('X-Salary-Client', 'web')
-        .send({ amount: '22500.00', expectedCurrentId: r2.body.current.id });
+        .send({ amount: '22500.00', expectedCurrentId: r2.body.current.id, expectedVersion: 3 });
       expect(r3.status).toBe(200);
 
       const historyRes = await request(app.getHttpServer())
@@ -483,7 +496,7 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .set('Cookie', authCookie)
         .set('Origin', testClientOrigin)
         .set('X-Salary-Client', 'web')
-        .send({ amount: '12000.00', expectedCurrentId: null });
+        .send({ amount: '12000.00', expectedCurrentId: null, expectedVersion: 1 });
       expect(r1.status).toBe(200);
 
       // Attempt update with wrong expectedCurrentId
@@ -492,7 +505,7 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .set('Cookie', authCookie)
         .set('Origin', testClientOrigin)
         .set('X-Salary-Client', 'web')
-        .send({ amount: '14000.00', expectedCurrentId: 999999 });
+        .send({ amount: '14000.00', expectedCurrentId: 999999, expectedVersion: 2 });
 
       expect(staleRes.status).toBe(409);
       expect(staleRes.body.error.message).toMatch(/Stale current salary ID/);
@@ -503,7 +516,7 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .set('Cookie', authCookie)
         .set('Origin', testClientOrigin)
         .set('X-Salary-Client', 'web')
-        .send({ amount: '14000.00', expectedCurrentId: null });
+        .send({ amount: '14000.00', expectedCurrentId: null, expectedVersion: 2 });
 
       expect(staleNullRes.status).toBe(409);
     });
@@ -566,7 +579,7 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .set('Cookie', authCookie)
         .set('Origin', testClientOrigin)
         .set('X-Salary-Client', 'web')
-        .send({ amount: '20000.00' });
+        .send({ amount: '20000.00', expectedCurrentId: null, expectedVersion: 1 });
 
       expect(res.status).toBe(409);
       expect(res.body.error.message).toMatch(/archived/i);
@@ -590,13 +603,13 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
           .set('Cookie', authCookie)
           .set('Origin', testClientOrigin)
           .set('X-Salary-Client', 'web')
-          .send({ amount: '21000.00', expectedCurrentId: null }),
+          .send({ amount: '21000.00', expectedCurrentId: null, expectedVersion: 1 }),
         request(app.getHttpServer())
           .put(`/api/employees/${emp.id}/basic-salary`)
           .set('Cookie', authCookie)
           .set('Origin', testClientOrigin)
           .set('X-Salary-Client', 'web')
-          .send({ amount: '22000.00', expectedCurrentId: null }),
+          .send({ amount: '22000.00', expectedCurrentId: null, expectedVersion: 1 }),
       ]);
 
       const statuses = [resA.status, resB.status].sort();
@@ -626,7 +639,7 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .set('Cookie', authCookie)
         .set('Origin', testClientOrigin)
         .set('X-Salary-Client', 'web')
-        .send({ amount: '19000.00', expectedCurrentId: null });
+        .send({ amount: '19000.00', expectedCurrentId: null, expectedVersion: 1 });
       expect(initialRes.status).toBe(200);
       const currentSalaryId = initialRes.body.current.id;
 
@@ -636,13 +649,13 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
           .set('Cookie', authCookie)
           .set('Origin', testClientOrigin)
           .set('X-Salary-Client', 'web')
-          .send({ amount: '23000.00', expectedCurrentId: currentSalaryId }),
+          .send({ amount: '23000.00', expectedCurrentId: currentSalaryId, expectedVersion: 2 }),
         request(app.getHttpServer())
           .put(`/api/employees/${emp.id}/basic-salary`)
           .set('Cookie', authCookie)
           .set('Origin', testClientOrigin)
           .set('X-Salary-Client', 'web')
-          .send({ amount: '24000.00', expectedCurrentId: currentSalaryId }),
+          .send({ amount: '24000.00', expectedCurrentId: currentSalaryId, expectedVersion: 2 }),
       ]);
 
       const statuses = [resA.status, resB.status].sort();
@@ -673,13 +686,57 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
       employeeId = emp.id;
     });
 
+    it('rejects request when expectedVersion is omitted with 400 Bad Request', async () => {
+      const res = await request(app.getHttpServer())
+        .put(`/api/employees/${employeeId}/basic-salary`)
+        .set('Cookie', authCookie)
+        .set('Origin', testClientOrigin)
+        .set('X-Salary-Client', 'web')
+        .send({ amount: '25000.00', expectedCurrentId: null });
+
+      expect(res.status).toBe(400);
+    });
+
+    it('rejects request when expectedVersion is not an integer >= 1 with 400 Bad Request', async () => {
+      const res = await request(app.getHttpServer())
+        .put(`/api/employees/${employeeId}/basic-salary`)
+        .set('Cookie', authCookie)
+        .set('Origin', testClientOrigin)
+        .set('X-Salary-Client', 'web')
+        .send({ amount: '25000.00', expectedCurrentId: null, expectedVersion: 0 });
+
+      expect(res.status).toBe(400);
+    });
+
+    it('rejects request when expectedCurrentId is omitted with 400 Bad Request', async () => {
+      const res = await request(app.getHttpServer())
+        .put(`/api/employees/${employeeId}/basic-salary`)
+        .set('Cookie', authCookie)
+        .set('Origin', testClientOrigin)
+        .set('X-Salary-Client', 'web')
+        .send({ amount: '25000.00', expectedVersion: 1 });
+
+      expect(res.status).toBe(400);
+    });
+
+    it('rejects request when expectedCurrentId is invalid type with 400 Bad Request', async () => {
+      const res = await request(app.getHttpServer())
+        .put(`/api/employees/${employeeId}/basic-salary`)
+        .set('Cookie', authCookie)
+        .set('Origin', testClientOrigin)
+        .set('X-Salary-Client', 'web')
+        .send({ amount: '25000.00', expectedCurrentId: -5, expectedVersion: 1 });
+
+      expect(res.status).toBe(400);
+    });
+
     it('rejects negative amounts with 400 Bad Request', async () => {
       const res = await request(app.getHttpServer())
         .put(`/api/employees/${employeeId}/basic-salary`)
         .set('Cookie', authCookie)
         .set('Origin', testClientOrigin)
         .set('X-Salary-Client', 'web')
-        .send({ amount: '-500.00' });
+        .send({ amount: '-500.00', expectedCurrentId: null, expectedVersion: 1 });
 
       expect(res.status).toBe(400);
       expect(res.body.error).toBeDefined();
@@ -691,7 +748,7 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .set('Cookie', authCookie)
         .set('Origin', testClientOrigin)
         .set('X-Salary-Client', 'web')
-        .send({ amount: 'PHP 25,000.00' });
+        .send({ amount: 'PHP 25,000.00', expectedCurrentId: null, expectedVersion: 1 });
 
       expect(res.status).toBe(400);
       expect(res.body.error).toBeDefined();
@@ -703,7 +760,7 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .set('Cookie', authCookie)
         .set('Origin', testClientOrigin)
         .set('X-Salary-Client', 'web')
-        .send({ amount: '20000.555' });
+        .send({ amount: '20000.555', expectedCurrentId: null, expectedVersion: 1 });
 
       expect(res.status).toBe(400);
       expect(res.body.error).toBeDefined();
@@ -715,7 +772,7 @@ describe('Basic Salary & Rate Integration against Neon Test Database (Ticket 03)
         .set('Cookie', authCookie)
         .set('Origin', testClientOrigin)
         .set('X-Salary-Client', 'web')
-        .send({ amount: '1000000000000.00' });
+        .send({ amount: '1000000000000.00', expectedCurrentId: null, expectedVersion: 1 });
 
       expect(res.status).toBe(400);
       expect(res.body.error).toBeDefined();
