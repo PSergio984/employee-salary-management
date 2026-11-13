@@ -1,12 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../context/useAuth.js';
-import { Employee } from '../types/employee.js';
-import {
-  createEmployeeApi,
-  getEmployeeByIdApi,
-  getEmployeesApi,
-  updateEmployeeApi,
-} from '../api/employees.js';
+import { useEmployeesViewModel } from '../viewmodels/useEmployeesViewModel.js';
+import { createEmployeeApi, updateEmployeeApi } from '../api/employees.js';
 import { EmployeeDirectory } from './EmployeeDirectory.js';
 import { EmployeeDetail } from './EmployeeDetail.js';
 import { EmployeeModal } from './EmployeeModal.js';
@@ -30,67 +25,29 @@ export const AppShell: React.FC = () => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
 
-  // Employee Directory state
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [total, setTotal] = useState<number>(0);
-  const [page, setPage] = useState<number>(1);
-  const [pageSize] = useState<number>(20);
-  const [totalPages, setTotalPages] = useState<number>(1);
-  const [search, setSearch] = useState<string>('');
-  const [statusFilter, setStatusFilter] = useState<'active' | 'archived' | 'all'>('active');
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  // Selected Employee Detail state
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-
-  // Modal State
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
-
-  const fetchEmployees = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const res = await getEmployeesApi({
-        search,
-        status: statusFilter,
-        page,
-        pageSize,
-      });
-      setEmployees(res.items);
-      setTotal(res.total);
-      setTotalPages(res.totalPages);
-    } catch (err) {
-      console.error('Failed to fetch employees:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [search, statusFilter, page, pageSize]);
-
-  useEffect(() => {
-    let isMounted = true;
-    getEmployeesApi({
-      search,
-      status: statusFilter,
-      page,
-      pageSize,
-    })
-      .then((res) => {
-        if (!isMounted) return;
-        setEmployees(res.items);
-        setTotal(res.total);
-        setTotalPages(res.totalPages);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        if (!isMounted) return;
-        console.error('Failed to fetch employees:', err);
-        setIsLoading(false);
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [search, statusFilter, page, pageSize]);
+  const {
+    employees,
+    total,
+    page,
+    pageSize,
+    totalPages,
+    search,
+    statusFilter,
+    isLoading,
+    selectedEmployee,
+    setSelectedEmployee,
+    isModalOpen,
+    employeeToEdit,
+    fetchEmployees,
+    handleOpenCreateModal,
+    handleOpenEditModal,
+    handleCloseModal,
+    handleModalSuccess,
+    handleRefreshSelectedEmployee,
+    handleSearchChange,
+    handleStatusFilterChange,
+    setPage,
+  } = useEmployeesViewModel();
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -125,31 +82,6 @@ export const AppShell: React.FC = () => {
         day: 'numeric',
       })
     : '';
-
-  // Modal Handlers
-  const handleOpenCreateModal = () => {
-    setEmployeeToEdit(null);
-    setIsModalOpen(true);
-  };
-
-  const handleOpenEditModal = (emp: Employee) => {
-    setEmployeeToEdit(emp);
-    setIsModalOpen(true);
-  };
-
-  const handleModalSuccess = (savedEmployee: Employee) => {
-    setSelectedEmployee(savedEmployee);
-    void fetchEmployees();
-  };
-
-  const handleRefreshSelectedEmployee = async (id: number) => {
-    try {
-      const refreshed = await getEmployeeByIdApi(id);
-      setSelectedEmployee(refreshed);
-    } catch (err) {
-      console.error('Failed to refresh employee details:', err);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
@@ -271,15 +203,9 @@ export const AppShell: React.FC = () => {
               totalPages={totalPages}
               isLoading={isLoading}
               search={search}
-              onSearchChange={(newSearch) => {
-                setSearch(newSearch);
-                setPage(1);
-              }}
+              onSearchChange={handleSearchChange}
               statusFilter={statusFilter}
-              onStatusFilterChange={(newStatus) => {
-                setStatusFilter(newStatus);
-                setPage(1);
-              }}
+              onStatusFilterChange={handleStatusFilterChange}
               onPageChange={(newPage) => setPage(newPage)}
               onOpenCreateModal={handleOpenCreateModal}
               onSelectEmployee={(emp) => setSelectedEmployee(emp)}
@@ -407,7 +333,7 @@ export const AppShell: React.FC = () => {
       {/* Contextual Create/Edit Modal */}
       <EmployeeModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         onSubmitCreate={createEmployeeApi}
         onSubmitEdit={updateEmployeeApi}
         employeeToEdit={employeeToEdit}

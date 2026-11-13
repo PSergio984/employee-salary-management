@@ -1,14 +1,6 @@
-import React, { useState } from 'react';
-import {
-  SalaryComponent,
-  CreateSalaryComponentInput,
-  UpdateSalaryComponentInput,
-} from '../../types/salary-component.js';
-import {
-  createSalaryComponent,
-  updateSalaryComponent,
-} from '../../api/salary-components.js';
-import { ApiError } from '../../api/client.js';
+import React from 'react';
+import { SalaryComponent } from '../../types/salary-component.js';
+import { useComponentDialogViewModel } from '../../viewmodels/useComponentDialogViewModel.js';
 import { X, AlertCircle, Loader2, Save } from 'lucide-react';
 
 interface ComponentDialogProps {
@@ -26,79 +18,25 @@ export const ComponentDialog: React.FC<ComponentDialogProps> = ({
   onClose,
   onSuccess,
 }) => {
-  const defaultName = mode === 'edit' && component ? component.name : '';
-  const [name, setName] = useState(defaultName);
-  const [initialName] = useState(defaultName);
-  const [fieldError, setFieldError] = useState<string | null>(null);
-  const [generalError, setGeneralError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
+  const {
+    name,
+    setName,
+    fieldError,
+    generalError,
+    isSubmitting,
+    showDiscardConfirm,
+    setShowDiscardConfirm,
+    handleCloseAttempt,
+    handleConfirmDiscard,
+    handleSubmit,
+  } = useComponentDialogViewModel({
+    mode,
+    component,
+    onClose,
+    onSuccess,
+  });
 
   if (!isOpen) return null;
-
-  const isDirty = name !== initialName;
-
-  const handleCloseAttempt = () => {
-    if (isSubmitting) return;
-    if (isDirty) {
-      setShowDiscardConfirm(true);
-    } else {
-      onClose();
-    }
-  };
-
-  const handleConfirmDiscard = () => {
-    setShowDiscardConfirm(false);
-    onClose();
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFieldError(null);
-    setGeneralError(null);
-
-    const trimmedName = name.trim();
-    if (!trimmedName) {
-      setFieldError('Component name cannot be blank.');
-      return;
-    }
-
-    if (trimmedName.length > 100) {
-      setFieldError('Component name cannot exceed 100 characters.');
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      if (mode === 'create') {
-        const payload: CreateSalaryComponentInput = { name: trimmedName };
-        const created = await createSalaryComponent(payload);
-        onSuccess(created, 'create');
-      } else if (mode === 'edit' && component) {
-        const payload: UpdateSalaryComponentInput = {
-          name: trimmedName,
-          expectedVersion: component.version,
-        };
-        const updated = await updateSalaryComponent(component.id, payload);
-        onSuccess(updated, 'edit');
-      }
-    } catch (err: unknown) {
-      // Preserve user input upon failure
-      if (err instanceof ApiError) {
-        if (err.status === 409) {
-          setGeneralError(err.message);
-        } else if (err.fieldErrors?.name) {
-          setFieldError(err.fieldErrors.name.join(', '));
-        } else {
-          setGeneralError(err.message || 'Operation failed. Please review and retry.');
-        }
-      } else {
-        setGeneralError('An unexpected error occurred. Please retry.');
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <div
@@ -187,8 +125,6 @@ export const ComponentDialog: React.FC<ComponentDialogProps> = ({
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
-                  if (fieldError) setFieldError(null);
-                  if (generalError) setGeneralError(null);
                 }}
                 disabled={isSubmitting}
                 placeholder="e.g. Night Shift Differential"
