@@ -1,0 +1,31 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+model AdminUser {
+  id           Int           @id @default(autoincrement())
+  username     String        @unique
+  passwordHash String        @map("password_hash")
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  sessions     AuthSession[]
+
+  @@map("admin_users")
+}
+
+model AuthSession {
+  id          String    @id @default(uuid())
+  adminUserId Int       @map("admin_user_id")
+  adminUser   AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+  tokenHash   String    @unique @map("token_hash")
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  expiresAt   DateTime  @map("expires_at") @db.Timestamptz(3)
+  revokedAt   DateTime? @map("revoked_at") @db.Timestamptz(3)
+
+  @@index([adminUserId])
+  @@map("auth_sessions")
+}
